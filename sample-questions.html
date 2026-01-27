@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operating Systems - Sample Questions</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #e74c3c;
+            border-left: 5px solid #e74c3c;
+            padding-left: 15px;
+            margin-top: 40px;
+        }
+        h3 {
+            color: #27ae60;
+            margin-top: 30px;
+        }
+        h4 {
+            color: #8e44ad;
+            margin-top: 25px;
+        }
+        .question-section {
+            margin-bottom: 40px;
+            border: 2px solid #ecf0f1;
+            padding: 25px;
+            border-radius: 8px;
+        }
+        .question {
+            background: #3498db;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        .answer {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .numerical {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            white-space: pre-line;
+        }
+        .important {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .warning {
+            background: #f8d7da;
+            border: 2px solid #f5c6cb;
+            color: #721c24;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        ul, ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        li {
+            margin: 8px 0;
+        }
+        .back-link {
+            background: #27ae60;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        .back-link:hover {
+            background: #219a52;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← Back to Notes</a>
+        
+        <h1>Operating Systems - Sample Questions & Answers</h1>
+        <p style="text-align: center; font-weight: bold; color: #2c3e50; font-size: 18px; margin-bottom: 10px;">
+            Prepared by: Smriti
+        </p>
+        <p style="text-align: center; font-style: italic; color: #7f8c8d;">
+            Based on Silberschatz, A., Galvin, P. B., & Gagne, G. (2011). Operating System Concepts (6th ed.)
+        </p>
+        
+        <div class="warning">
+            <h3 style="color: #721c24; margin-top: 0;">⚠️ IMPORTANT WARNING ⚠️</h3>
+            <p style="font-weight: bold; font-size: 16px; margin-bottom: 10px;">
+                These are sample questions for practice purposes only.
+            </p>
+            <p style="font-size: 14px; margin: 0;">
+                <strong>Please refer to the original textbook (Silberschatz, Galvin & Gagne - Operating System Concepts) for complete and accurate content for your exam preparation.</strong>
+            </p>
+        </div>
+
+        <!-- 3 MARK QUESTIONS -->
+        <div class="question-section">
+            <h2>🔹 UNIT I & II – 3 MARK QUESTIONS</h2>
+
+            <div class="question">1️⃣ Define Operating System (Very frequently asked – Unit I)</div>
+            <div class="answer">
+                <ol>
+                    <li>An Operating System (OS) is a system software.</li>
+                    <li>It acts as an interface between user and hardware.</li>
+                    <li>It manages CPU, memory, I/O devices, and files.</li>
+                    <li>It controls execution of application programs.</li>
+                    <li>It provides an environment for program execution.</li>
+                    <li>It ensures efficient utilization of system resources.</li>
+                    <li>It handles process scheduling and synchronization.</li>
+                    <li>It provides security and protection mechanisms.</li>
+                    <li>It supports multitasking and multiprogramming.</li>
+                    <li>Examples include Windows, Linux, UNIX, macOS.</li>
+                </ol>
+            </div>
+
+            <div class="question">2️⃣ Define Semaphore (Very important – Unit II)</div>
+            <div class="answer">
+                <ol>
+                    <li>A semaphore is a synchronization tool.</li>
+                    <li>It is used to control access to shared resources.</li>
+                    <li>It is an integer variable.</li>
+                    <li>It is accessed only through atomic operations.</li>
+                    <li>Two main operations are wait() and signal().</li>
+                    <li>wait() decreases the semaphore value.</li>
+                    <li>signal() increases the semaphore value.</li>
+                    <li>Semaphores prevent race conditions.</li>
+                    <li>They help in process synchronization.</li>
+                    <li>Types include binary semaphore and counting semaphore.</li>
+                </ol>
+            </div>
+
+            <div class="question">3️⃣ What is Thread (Unit I – Multithreading)</div>
+            <div class="answer">
+                <ol>
+                    <li>A thread is the smallest unit of execution within a process.</li>
+                    <li>It is also called a lightweight process.</li>
+                    <li>A thread shares the code, data, and resources of its parent process.</li>
+                    <li>Each thread has its own program counter.</li>
+                    <li>Each thread maintains its own register set.</li>
+                    <li>Threads have their own stack for execution.</li>
+                    <li>Multiple threads can exist within a single process.</li>
+                    <li>Threads enable concurrent execution within the same process.</li>
+                    <li>Thread creation is faster than process creation.</li>
+                    <li>Threads improve CPU utilization and responsiveness.</li>
+                </ol>
+            </div>
+
+            <div class="question">4️⃣ What is Critical Section (Unit II – Synchronization)</div>
+            <div class="answer">
+                <ol>
+                    <li>Critical section is part of a program.</li>
+                    <li>It accesses shared variables/resources.</li>
+                    <li>Only one process can execute it at a time.</li>
+                    <li>Prevents race conditions.</li>
+                    <li>Requires mutual exclusion.</li>
+                    <li>Must satisfy progress condition.</li>
+                    <li>Must avoid starvation.</li>
+                    <li>Used in concurrent systems.</li>
+                    <li>Controlled using semaphores or monitors.</li>
+                    <li>Essential for data consistency.</li>
+                </ol>
+            </div>
+
+            <div class="question">5️⃣ What is Deadlock (Unit II)</div>
+            <div class="answer">
+                <ol>
+                    <li>Deadlock is a system state.</li>
+                    <li>Processes wait indefinitely.</li>
+                    <li>Each process holds a resource.</li>
+                    <li>Each process waits for another resource.</li>
+                    <li>No process can proceed.</li>
+                    <li>Resources are permanently blocked.</li>
+                    <li>Occurs in concurrent systems.</li>
+                    <li>Causes system halt.</li>
+                    <li>Requires special handling.</li>
+                    <li>Common in multiprogramming systems.</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- 8 MARK QUESTIONS -->
+        <div class="question-section">
+            <h2>🔹 UNIT I & II – 8 MARK QUESTIONS</h2>
+
+            <div class="question">1️⃣ Explain Operating System and its Services (Very frequently asked – 8 marks)</div>
+            <div class="answer">
+                <ol>
+                    <li>An Operating System is system software that acts as an interface between the user and computer hardware.</li>
+                    <li>It manages all hardware resources such as CPU, memory, and I/O devices.</li>
+                    <li>The OS provides an environment for the execution of programs.</li>
+                    <li>Program execution service loads a program into memory and executes it.</li>
+                    <li>I/O operation service allows programs to perform input and output operations safely.</li>
+                    <li>File system manipulation service enables creating, deleting, reading, and writing files.</li>
+                    <li>Communication service allows processes to exchange information using shared memory or message passing.</li>
+                    <li>Error detection service detects hardware and software errors.</li>
+                    <li>Resource allocation service allocates CPU, memory, and devices to processes.</li>
+                    <li>Accounting service keeps track of resource usage by users and processes.</li>
+                    <li>Protection service ensures controlled access to system resources.</li>
+                    <li>Security service prevents unauthorized access to the system.</li>
+                    <li>OS services improve user convenience.</li>
+                    <li>OS services improve system efficiency.</li>
+                    <li>Thus, OS acts as both a resource manager and a service provider.</li>
+                </ol>
+            </div>
+
+            <div class="question">2️⃣ Explain Critical Section Problem and Its Solutions (Very important – Unit II)</div>
+            <div class="answer">
+                <ol>
+                    <li>Critical section is a part of code accessing shared resources.</li>
+                    <li>Only one process should execute critical section at a time.</li>
+                    <li>Mutual exclusion is mandatory.</li>
+                    <li>Progress condition must be satisfied.</li>
+                    <li>Bounded waiting ensures fairness.</li>
+                    <li>Race conditions occur if synchronization fails.</li>
+                    <li>Software solutions exist for critical section problem.</li>
+                    <li>Peterson's solution solves two-process synchronization.</li>
+                    <li>Hardware solutions use atomic instructions.</li>
+                    <li>Test-and-Set is a hardware instruction.</li>
+                    <li>Semaphores provide a general solution.</li>
+                    <li>Binary semaphores ensure mutual exclusion.</li>
+                    <li>Counting semaphores manage multiple resources.</li>
+                    <li>Monitors provide high-level synchronization.</li>
+                    <li>Proper synchronization ensures data consistency.</li>
+                </ol>
+            </div>
+
+            <div class="question">3️⃣ Explain CPU Scheduling – Criteria and Algorithms (Highly important – numericals + theory)</div>
+            <div class="answer">
+                <ol>
+                    <li>CPU scheduling determines which process gets CPU control.</li>
+                    <li>It is essential in multiprogramming systems.</li>
+                    <li>CPU utilization should be maximized.</li>
+                    <li>Throughput should be increased.</li>
+                    <li>Turnaround time should be minimized.</li>
+                    <li>Waiting time should be minimized.</li>
+                    <li>Response time is critical in interactive systems.</li>
+                    <li>FCFS scheduling executes processes in arrival order.</li>
+                    <li>SJF scheduling selects the shortest burst time process.</li>
+                    <li>Priority scheduling assigns priority to each process.</li>
+                    <li>Round Robin scheduling uses time quantum.</li>
+                    <li>Multilevel queue scheduling uses multiple ready queues.</li>
+                    <li>Multilevel feedback queue allows movement between queues.</li>
+                    <li>Scheduling prevents CPU starvation.</li>
+                    <li>Proper scheduling improves overall system performance.</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- 15 MARK QUESTIONS -->
+        <div class="question-section">
+            <h2>🔹 UNIT I & II – 15 MARK QUESTIONS</h2>
+
+            <div class="question">1️⃣ Explain Operating System – Functions, Goals and Types (Very frequently asked – 15 marks)</div>
+            <div class="answer">
+                <ol>
+                    <li>An Operating System (OS) is system software that manages computer hardware and software resources.</li>
+                    <li>It acts as an interface between the user and the hardware.</li>
+                    <li>One of the main functions of an OS is process management.</li>
+                    <li>It creates, schedules, and terminates processes.</li>
+                    <li>Memory management is another key function of the OS.</li>
+                    <li>The OS allocates and deallocates main memory efficiently.</li>
+                    <li>File management allows creation, deletion, and manipulation of files.</li>
+                    <li>I/O device management controls and coordinates device operations.</li>
+                    <li>The OS provides protection and security to system resources.</li>
+                    <li>The goal of an OS is convenience, making the system easy to use.</li>
+                    <li>Another goal is efficiency, ensuring optimal use of resources.</li>
+                    <li>Batch operating systems execute jobs in batches.</li>
+                    <li>Time-sharing systems allow interactive use by multiple users.</li>
+                    <li>Real-time operating systems respond within strict time limits.</li>
+                    <li>Thus, the OS acts as a resource manager and service provider.</li>
+                </ol>
+            </div>
+
+            <div class="question">2️⃣ Explain Deadlock – Characterization and Handling Methods (Most important Unit II question)</div>
+            <div class="answer">
+                <ol>
+                    <li>Deadlock is a situation where processes wait indefinitely.</li>
+                    <li>Each process holds at least one resource.</li>
+                    <li>Mutual exclusion must exist.</li>
+                    <li>Hold and wait condition must exist.</li>
+                    <li>No preemption must exist.</li>
+                    <li>Circular wait must exist.</li>
+                    <li>All four conditions must hold simultaneously.</li>
+                    <li>Deadlock prevents system progress.</li>
+                    <li>Deadlock prevention breaks a condition.</li>
+                    <li>Deadlock avoidance ensures safe state.</li>
+                    <li>Banker's algorithm is used for avoidance.</li>
+                    <li>Detection allows deadlock to occur.</li>
+                    <li>Wait-for graph detects deadlock.</li>
+                    <li>Recovery resolves deadlock.</li>
+                    <li>Deadlock handling is essential for system stability.</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- NUMERICAL PROBLEMS -->
+        <div class="question-section">
+            <h2>🔹 NUMERICAL PROBLEMS</h2>
+
+            <div class="question">1️⃣ FCFS (First Come First Serve) Scheduling</div>
+            <div class="answer">
+                <strong>Problem:</strong>
+                <table>
+                    <tr>
+                        <th>Process</th>
+                        <th>Arrival Time</th>
+                        <th>Burst Time</th>
+                    </tr>
+                    <tr>
+                        <td>P1</td>
+                        <td>0</td>
+                        <td>6</td>
+                    </tr>
+                    <tr>
+                        <td>P2</td>
+                        <td>2</td>
+                        <td>4</td>
+                    </tr>
+                    <tr>
+                        <td>P3</td>
+                        <td>4</td>
+                        <td>5</td>
+                    </tr>
+                </table>
+
+                <div class="numerical">
+Gantt Chart:
+0      6      10        15
+| P1   | P2   |   P3   |
+
+Waiting Time (WT):
+WT(P1) = 0
+WT(P2) = 6 - 2 = 4
+WT(P3) = 10 - 4 = 6
+
+Average WT = (0 + 4 + 6) / 3 = 3.33
+
+Turnaround Time (TAT):
+TAT(P1) = 6 - 0 = 6
+TAT(P2) = 10 - 2 = 8
+TAT(P3) = 15 - 4 = 11
+
+Average TAT = (6 + 8 + 11) / 3 = 8.33
+                </div>
+            </div>
+
+            <div class="question">2️⃣ Round Robin Scheduling</div>
+            <div class="answer">
+                <strong>Problem:</strong> Time Quantum = 3
+                <table>
+                    <tr>
+                        <th>Process</th>
+                        <th>Burst Time</th>
+                    </tr>
+                    <tr>
+                        <td>P1</td>
+                        <td>10</td>
+                    </tr>
+                    <tr>
+                        <td>P2</td>
+                        <td>5</td>
+                    </tr>
+                    <tr>
+                        <td>P3</td>
+                        <td>8</td>
+                    </tr>
+                </table>
+
+                <div class="numerical">
+Gantt Chart:
+0  3  6  9  12 15 18 20 23
+|P1|P2|P3|P1|P2|P3|P1|P3|P1|
+
+Completion Time:
+CT(P2) = 15
+CT(P3) = 20
+CT(P1) = 23
+
+Waiting Time:
+WT(P1) = 23 - 10 = 13
+WT(P2) = 15 - 5 = 10
+WT(P3) = 20 - 8 = 12
+
+Average WT = (13 + 10 + 12) / 3 = 11.67
+                </div>
+            </div>
+
+            <div class="question">3️⃣ Banker's Algorithm (Safety Check)</div>
+            <div class="answer">
+                <strong>Given:</strong>
+                <div class="numerical">
+Allocation Matrix:
+P1: 0 1 0
+P2: 2 0 0
+P3: 3 0 2
+
+Max Matrix:
+P1: 7 5 3
+P2: 3 2 2
+P3: 9 0 2
+
+Available: 3 3 2
+
+Need = Max - Allocation:
+P1: 7 4 3
+P2: 1 2 2
+P3: 6 0 0
+
+Safe Sequence Check:
+1. P2 can execute (Need ≤ Available)
+2. After P2: Available = 3+2, 3+0, 2+0 = 5 3 2
+3. P1 can execute (Need ≤ Available)
+4. After P1: Available = 5+0, 3+1, 2+0 = 5 4 2
+5. P3 can execute (Need ≤ Available)
+
+Safe Sequence: P2 → P1 → P3
+✔ System is in SAFE STATE
+                </div>
+            </div>
+        </div>
+
+        <footer style="margin-top: 30px; text-align: center; color: #7f8c8d; font-style: italic;">
+            <p>Operating Systems Sample Questions - Exam Preparation</p>
+            <p>Based on Silberschatz, Galvin & Gagne - Operating System Concepts</p>
+        </footer>
+    </div>
+</body>
+</html>
