@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linux + OS End Sem Cheat Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --panel: #111118;
+    --border: #1e1e2e;
+    --accent1: #00ff9d;
+    --accent2: #ff6b6b;
+    --accent3: #ffd93d;
+    --accent4: #74b9ff;
+    --accent5: #a29bfe;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --code-bg: #0d1117;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    padding: 16px;
+  }
+
+  .header {
+    text-align: center;
+    padding: 20px 0 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 20px;
+  }
+
+  .header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent1);
+    letter-spacing: -0.5px;
+    text-transform: uppercase;
+  }
+
+  .header p {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 4px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    break-inside: avoid;
+  }
+
+  .card.wide { grid-column: span 2; }
+  .card.full { grid-column: span 3; }
+
+  .card-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+
+  .t1 { background: rgba(0,255,157,0.15); color: var(--accent1); }
+  .t2 { background: rgba(255,107,107,0.15); color: var(--accent2); }
+  .t3 { background: rgba(255,217,61,0.15); color: var(--accent3); }
+  .t4 { background: rgba(116,185,255,0.15); color: var(--accent4); }
+  .t5 { background: rgba(162,155,254,0.15); color: var(--accent5); }
+  .t6 { background: rgba(255,255,255,0.08); color: #cbd5e1; }
+
+  pre, code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+  }
+
+  pre {
+    background: var(--code-bg);
+    border: 1px solid #1a1a2e;
+    border-radius: 5px;
+    padding: 10px 12px;
+    overflow-x: auto;
+    line-height: 1.65;
+  }
+
+  .comment { color: #4a5568; }
+  .cmd { color: #74b9ff; }
+  .flag { color: #ffd93d; }
+  .str { color: #00ff9d; }
+  .kw { color: #a29bfe; }
+  .num { color: #ff6b6b; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    margin-top: 4px;
+  }
+
+  th {
+    background: rgba(255,255,255,0.05);
+    color: var(--muted);
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 1px;
+    padding: 5px 8px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+
+  td {
+    padding: 4px 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    vertical-align: top;
+  }
+
+  td:first-child { color: var(--accent3); }
+
+  .section-label {
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 8px 0 4px;
+    font-weight: 600;
+  }
+
+  .tag-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+  .tag {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 3px;
+    padding: 2px 7px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+
+  .divider { height: 1px; background: var(--border); margin: 8px 0; }
+
+  .tip {
+    background: rgba(255,217,61,0.07);
+    border-left: 3px solid var(--accent3);
+    padding: 6px 10px;
+    border-radius: 0 4px 4px 0;
+    font-size: 11.5px;
+    margin-top: 8px;
+    color: #e2b714;
+  }
+
+  .warn {
+    background: rgba(255,107,107,0.07);
+    border-left: 3px solid var(--accent2);
+    padding: 6px 10px;
+    border-radius: 0 4px 4px 0;
+    font-size: 11.5px;
+    margin-top: 8px;
+    color: #ff6b6b;
+  }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+
+  h4 { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin: 8px 0 4px; }
+
+  @media print {
+    body { background: #fff; color: #000; padding: 8px; font-size: 11px; }
+    .card { border: 1px solid #ddd; background: #fafafa; }
+    pre { background: #f4f4f4; border: 1px solid #ddd; }
+    .grid { gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🖥 Linux + OS · End Sem Cheat Sheet</h1>
+  <p>Linux Commands · AWK · SED · GREP · Scheduling Algorithms</p>
+</div>
+
+<!-- ROW 1 -->
+<div class="grid">
+
+  <!-- PATH NAVIGATION -->
+  <div class="card">
+    <div class="card-title t1">📁 Path Navigation</div>
+    <pre><span class="cmd">cd</span> /home/user/dir     <span class="comment"># absolute</span>
+<span class="cmd">cd</span> ../../dir          <span class="comment"># relative</span>
+<span class="cmd">cd</span> ~                  <span class="comment"># home dir</span>
+<span class="cmd">cd</span> -                  <span class="comment"># prev dir</span>
+<span class="cmd">cd</span> ../../Dir13/Dir18  <span class="comment"># multi-level</span>
+<span class="cmd">pwd</span>                   <span class="comment"># print CWD</span>
+<span class="cmd">ls</span> <span class="flag">-la</span>               <span class="comment"># list all</span>
+<span class="cmd">tree</span>                  <span class="comment"># visual tree</span></pre>
+  </div>
+
+  <!-- DIR & FILE OPS -->
+  <div class="card">
+    <div class="card-title t1">📂 Dir & File Ops</div>
+    <pre><span class="cmd">mkdir</span> dir
+<span class="cmd">mkdir</span> <span class="flag">-p</span> a/b/c        <span class="comment"># nested</span>
+<span class="cmd">mkdir</span> DE{2..4}        <span class="comment"># brace expand</span>
+<span class="cmd">touch</span> file.txt
+<span class="cmd">rm</span> file; <span class="cmd">rm</span> <span class="flag">-i</span> file   <span class="comment"># confirm</span>
+<span class="cmd">rm</span> <span class="flag">-rf</span> dir            <span class="comment"># ⚠ force+rec</span>
+<span class="cmd">cp</span> f1 f2; <span class="cmd">cp</span> <span class="flag">-r</span> d1 d2
+<span class="cmd">mv</span> old new            <span class="comment"># rename/move</span>
+<span class="cmd">ln</span> <span class="flag">-s</span> target link    <span class="comment"># symlink</span></pre>
+  </div>
+
+  <!-- LS -->
+  <div class="card">
+    <div class="card-title t1">🔍 ls Options</div>
+    <pre><span class="cmd">ls</span> <span class="flag">-l</span>      <span class="comment"># long format</span>
+<span class="cmd">ls</span> <span class="flag">-a</span>      <span class="comment"># show hidden</span>
+<span class="cmd">ls</span> <span class="flag">-la</span>     <span class="comment"># long + hidden</span>
+<span class="cmd">ls</span> <span class="flag">-lh</span>     <span class="comment"># human sizes</span>
+<span class="cmd">ls</span> <span class="flag">-R</span>      <span class="comment"># recursive</span>
+<span class="cmd">ls</span> <span class="flag">-lt</span>     <span class="comment"># sort by time</span>
+<span class="cmd">ls</span> <span class="flag">-lS</span>     <span class="comment"># sort by size</span>
+<span class="cmd">ls</span> <span class="flag">-d</span> */   <span class="comment"># dirs only</span>
+<span class="cmd">ls</span> <span class="flag">-i</span>      <span class="comment"># show inode</span></pre>
+  </div>
+</div>
+
+<div class="grid" style="margin-top:12px">
+
+  <!-- FILE CONTENT -->
+  <div class="card">
+    <div class="card-title t4">📄 File Content</div>
+    <pre><span class="cmd">cat</span> file         <span class="comment"># view</span>
+<span class="cmd">cat</span> > file        <span class="comment"># overwrite</span>
+<span class="cmd">cat</span> >> file       <span class="comment"># append</span>
+<span class="cmd">cat</span> f1 f2 > f3    <span class="comment"># merge files</span>
+<span class="cmd">less</span> / <span class="cmd">more</span> file  <span class="comment"># page view</span>
+<span class="cmd">head</span> <span class="flag">-n 5</span> file    <span class="comment"># first 5 lines</span>
+<span class="cmd">tail</span> <span class="flag">-n 5</span> file    <span class="comment"># last 5 lines</span>
+<span class="cmd">wc</span> file           <span class="comment"># lines words chars</span>
+<span class="cmd">wc</span> <span class="flag">-l</span> / <span class="flag">-w</span> / <span class="flag">-c</span>  <span class="comment"># individual counts</span></pre>
+  </div>
+
+  <!-- PERMISSIONS -->
+  <div class="card">
+    <div class="card-title t2">🔐 Permissions</div>
+    <pre><span class="cmd">chmod</span> u+x file    <span class="comment"># user +exec</span>
+<span class="cmd">chmod</span> g+w file    <span class="comment"># group +write</span>
+<span class="cmd">chmod</span> o-r file    <span class="comment"># other -read</span>
+<span class="cmd">chmod</span> <span class="num">777</span> file    <span class="comment"># rwxrwxrwx</span>
+<span class="cmd">chmod</span> <span class="num">755</span> file    <span class="comment"># rwxr-xr-x</span>
+<span class="cmd">chmod</span> <span class="num">644</span> file    <span class="comment"># rw-r--r--</span>
+<span class="cmd">chmod</span> <span class="num">444</span> file    <span class="comment"># read-only all</span>
+<span class="cmd">chown</span> user file   <span class="comment"># change owner</span>
+<span class="cmd">ls</span> <span class="flag">-l</span>            <span class="comment"># view permissions</span></pre>
+    <table style="margin-top:8px">
+      <tr><th>Symbol</th><th>Octal</th><th>Meaning</th></tr>
+      <tr><td>r</td><td>4</td><td>read</td></tr>
+      <tr><td>w</td><td>2</td><td>write</td></tr>
+      <tr><td>x</td><td>1</td><td>execute</td></tr>
+      <tr><td>-</td><td>0</td><td>none</td></tr>
+    </table>
+  </div>
+
+  <!-- VI EDITOR -->
+  <div class="card">
+    <div class="card-title t5">✏️ VI Editor</div>
+    <pre><span class="cmd">vi</span> file          <span class="comment"># open</span>
+<span class="kw">i</span>                <span class="comment"># insert mode</span>
+<span class="kw">a</span>                <span class="comment"># append after cursor</span>
+<span class="kw">o</span>                <span class="comment"># new line below</span>
+<span class="kw">Esc</span>              <span class="comment"># exit insert</span>
+<span class="kw">:w</span>               <span class="comment"># save</span>
+<span class="kw">:q</span>               <span class="comment"># quit</span>
+<span class="kw">:wq</span>              <span class="comment"># save & quit</span>
+<span class="kw">:q!</span>              <span class="comment"># force quit</span>
+<span class="kw">dd</span>               <span class="comment"># delete line</span>
+<span class="kw">yy</span>               <span class="comment"># copy (yank) line</span>
+<span class="kw">p</span>                <span class="comment"># paste</span>
+<span class="kw">u</span>                <span class="comment"># undo</span>
+<span class="kw">G</span>                <span class="comment"># go to last line</span>
+<span class="kw">gg</span>               <span class="comment"># go to first line</span></pre>
+  </div>
+</div>
+
+<!-- AWK SECTION - LARGE -->
+<div class="grid" style="margin-top:12px">
+  <div class="card wide">
+    <div class="card-title t3">⚡ AWK – Most Important</div>
+    <div class="two-col">
+      <div>
+        <h4>Variables</h4>
+        <table>
+          <tr><th>Var</th><th>Meaning</th></tr>
+          <tr><td>$1,$2..$n</td><td>column n</td></tr>
+          <tr><td>$0</td><td>entire line</td></tr>
+          <tr><td>NF</td><td>number of fields</td></tr>
+          <tr><td>NR</td><td>current line number</td></tr>
+          <tr><td>FS</td><td>field separator (input)</td></tr>
+          <tr><td>OFS</td><td>output field separator</td></tr>
+          <tr><td>RS</td><td>record separator</td></tr>
+          <tr><td>ORS</td><td>output record separator</td></tr>
+        </table>
+        <h4 style="margin-top:8px">Syntax</h4>
+        <pre><span class="comment"># Basic structure</span>
+<span class="cmd">awk</span> <span class="str">'pattern {action}'</span> file
+
+<span class="comment"># Delimiter flag</span>
+<span class="cmd">awk</span> <span class="flag">-F","</span> <span class="str">'{print $1,$4}'</span> file
+
+<span class="comment"># BEGIN = before reading, END = after</span>
+<span class="cmd">awk</span> <span class="str">'BEGIN{FS=","} {print $1} END{print "done"}'</span></pre>
+      </div>
+      <div>
+        <h4>Common Patterns</h4>
+        <pre><span class="comment"># Skip header (line 1)</span>
+<span class="cmd">awk</span> <span class="str">'NR!=1 {print}'</span> file
+
+<span class="comment"># Print last column</span>
+<span class="cmd">awk</span> <span class="str">'{print $NF}'</span> file
+
+<span class="comment"># Second last column</span>
+<span class="cmd">awk</span> <span class="str">'{print $(NF-1)}'</span> file
+
+<span class="comment"># Line numbers</span>
+<span class="cmd">awk</span> <span class="str">'{print NR,$0}'</span> file
+
+<span class="comment"># Sum of column 4</span>
+<span class="cmd">awk</span> <span class="flag">-F","</span> <span class="str">'{sum+=$4} END{print sum}'</span> file
+
+<span class="comment"># Average</span>
+<span class="cmd">awk</span> <span class="str">'{sum+=$4} END{print sum/NR}'</span> file
+
+<span class="comment"># Conditional filter</span>
+<span class="cmd">awk</span> <span class="str">'$4>100 {print}'</span> file
+<span class="cmd">awk</span> <span class="str">'$1=="RICE" {print}'</span> file
+<span class="cmd">awk</span> <span class="str">'$4>50 && $4<100'</span> file
+
+<span class="comment"># Formatted output (printf)</span>
+<span class="cmd">awk</span> <span class="str">'{printf "%s %d\n",$1,$4}'</span> file
+
+<span class="comment"># Count matching lines</span>
+<span class="cmd">awk</span> <span class="str">'/RICE/{count++} END{print count}'</span> file
+
+<span class="comment"># Print lines 3 to 6</span>
+<span class="cmd">awk</span> <span class="str">'NR>=3 && NR<=6'</span> file
+
+<span class="comment"># Print number of fields per line</span>
+<span class="cmd">awk</span> <span class="str">'{print NF}'</span> file</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- CALENDAR & DATE -->
+  <div class="card">
+    <div class="card-title t6">📅 Date & Calendar</div>
+    <pre><span class="cmd">cal</span>            <span class="comment"># this month</span>
+<span class="cmd">cal</span> 2026       <span class="comment"># full year</span>
+<span class="cmd">cal</span> <span class="flag">-3</span>         <span class="comment"># 3 months</span>
+<span class="cmd">cal</span> <span class="flag">-y</span>         <span class="comment"># this year</span>
+<span class="cmd">cal</span> 3 2026     <span class="comment"># March 2026</span>
+<span class="cmd">date</span>
+<span class="cmd">date</span> +<span class="str">"%d/%m/%Y"</span>
+<span class="cmd">date</span> +<span class="str">"%H:%M:%S"</span>
+<span class="cmd">date</span> +<span class="str">"%A"</span>     <span class="comment"># weekday name</span>
+<span class="cmd">date</span> +<span class="str">"%B"</span>     <span class="comment"># month name</span>
+<span class="cmd">date</span> +<span class="str">"%Y-%m-%d %T"</span></pre>
+  </div>
+</div>
+
+<!-- GREP + SED + CUT/SORT -->
+<div class="grid" style="margin-top:12px">
+
+  <!-- GREP -->
+  <div class="card">
+    <div class="card-title t2">🔎 GREP</div>
+    <pre><span class="cmd">grep</span> <span class="str">"RICE"</span> file
+<span class="cmd">grep</span> <span class="flag">-i</span> <span class="str">"rice"</span> file  <span class="comment"># ignore case</span>
+<span class="cmd">grep</span> <span class="flag">-v</span> <span class="str">"rice"</span> file  <span class="comment"># NOT match</span>
+<span class="cmd">grep</span> <span class="flag">-n</span> <span class="str">"rice"</span> file  <span class="comment"># line numbers</span>
+<span class="cmd">grep</span> <span class="flag">-c</span> <span class="str">"rice"</span> file  <span class="comment"># count matches</span>
+<span class="cmd">grep</span> <span class="flag">-l</span> <span class="str">"rice"</span> *     <span class="comment"># filenames only</span>
+<span class="cmd">grep</span> <span class="flag">-o</span> <span class="str">"OS"</span> file    <span class="comment"># only matched text</span>
+<span class="cmd">grep</span> <span class="flag">-r</span> <span class="str">"pat"</span> dir/   <span class="comment"># recursive</span>
+<span class="cmd">grep</span> <span class="flag">-w</span> <span class="str">"word"</span> file  <span class="comment"># whole word</span>
+<span class="cmd">grep</span> <span class="flag">-A 2</span> <span class="str">"pat"</span> file <span class="comment"># 2 lines after</span>
+<span class="cmd">grep</span> <span class="flag">-B 2</span> <span class="str">"pat"</span> file <span class="comment"># 2 lines before</span></pre>
+    <div class="section-label">Regex</div>
+    <pre><span class="cmd">grep</span> <span class="str">"^R"</span> file   <span class="comment"># starts with R</span>
+<span class="cmd">grep</span> <span class="str">"E$"</span> file   <span class="comment"># ends with E</span>
+<span class="cmd">grep</span> <span class="str">"[0-9]"</span> file <span class="comment"># has digit</span>
+<span class="cmd">grep</span> <span class="str">"[A-Z]"</span> file <span class="comment"># has uppercase</span>
+<span class="cmd">grep</span> <span class="str">"."</span> file    <span class="comment"># any char</span>
+<span class="cmd">grep</span> <span class="flag">-E</span> <span class="str">"(RICE|WHEAT)"</span> file</pre>
+  </div>
+
+  <!-- SED -->
+  <div class="card">
+    <div class="card-title t5">📝 SED – Stream Editor</div>
+    <pre><span class="comment"># Replace first occurrence/line</span>
+<span class="cmd">sed</span> <span class="str">'s/old/new/'</span> file
+
+<span class="comment"># Global replace</span>
+<span class="cmd">sed</span> <span class="str">'s/old/new/g'</span> file
+
+<span class="comment"># Case-insensitive replace</span>
+<span class="cmd">sed</span> <span class="str">'s/old/new/gi'</span> file
+
+<span class="comment"># Replace on specific line</span>
+<span class="cmd">sed</span> <span class="str">'2s/old/new/'</span> file
+<span class="cmd">sed</span> <span class="str">'2,5s/old/new/g'</span> file
+
+<span class="comment"># Delete line</span>
+<span class="cmd">sed</span> <span class="str">'5d'</span> file     <span class="comment"># delete line 5</span>
+<span class="cmd">sed</span> <span class="str">'$d'</span> file     <span class="comment"># delete last</span>
+<span class="cmd">sed</span> <span class="str">'1d'</span> file     <span class="comment"># delete first (header)</span>
+<span class="cmd">sed</span> <span class="str">'/^$/d'</span> file  <span class="comment"># delete blank lines</span>
+<span class="cmd">sed</span> <span class="str">'/RICE/d'</span> file <span class="comment"># delete matching lines</span>
+
+<span class="comment"># Print only replaced lines</span>
+<span class="cmd">sed</span> <span class="flag">-n</span> <span class="str">'s/unix/linux/p'</span> file
+
+<span class="comment"># Print specific lines</span>
+<span class="cmd">sed</span> <span class="flag">-n</span> <span class="str">'3,6p'</span> file
+<span class="cmd">sed</span> <span class="flag">-n</span> <span class="str">'$p'</span> file   <span class="comment"># last line</span>
+
+<span class="comment"># Multiple commands</span>
+<span class="cmd">sed</span> <span class="flag">-e</span> <span class="str">'s/a/b/'</span> <span class="flag">-e</span> <span class="str">'s/c/d/'</span> file
+
+<span class="comment"># Insert/append line</span>
+<span class="cmd">sed</span> <span class="str">'2i\new line'</span> file  <span class="comment"># insert before 2</span>
+<span class="cmd">sed</span> <span class="str">'2a\new line'</span> file  <span class="comment"># append after 2</span></pre>
+  </div>
+
+  <!-- CUT PASTE SORT -->
+  <div class="card">
+    <div class="card-title t4">✂️ CUT · PASTE · SORT</div>
+    <pre><span class="comment">── CUT ──</span>
+<span class="cmd">cut</span> <span class="flag">-d","</span> <span class="flag">-f1</span> file     <span class="comment"># field 1</span>
+<span class="cmd">cut</span> <span class="flag">-d","</span> <span class="flag">-f1,2</span> file   <span class="comment"># fields 1&2</span>
+<span class="cmd">cut</span> <span class="flag">-d","</span> <span class="flag">-f1-3</span> file   <span class="comment"># fields 1 to 3</span>
+<span class="cmd">cut</span> <span class="flag">-c1-5</span> file         <span class="comment"># chars 1-5</span>
+<span class="cmd">cut</span> <span class="flag">-c1,3,5</span> file       <span class="comment"># chars 1,3,5</span>
+
+<span class="comment">── SPLIT FILE ──</span>
+<span class="cmd">cut</span> <span class="flag">-d","</span> <span class="flag">-f1,2</span> file > INV1
+<span class="cmd">cut</span> <span class="flag">-d","</span> <span class="flag">-f3,4</span> file > INV2
+
+<span class="comment">── PASTE ──</span>
+<span class="cmd">paste</span> INV1 INV2
+<span class="cmd">paste</span> <span class="flag">-d","</span> INV1 INV2   <span class="comment"># with delimiter</span>
+<span class="cmd">paste</span> <span class="flag">-s</span> file           <span class="comment"># serial (rows→cols)</span>
+
+<span class="comment">── SORT ──</span>
+<span class="cmd">sort</span> file
+<span class="cmd">sort</span> <span class="flag">-r</span> file            <span class="comment"># reverse</span>
+<span class="cmd">sort</span> <span class="flag">-n</span> file            <span class="comment"># numeric</span>
+<span class="cmd">sort</span> <span class="flag">-u</span> file            <span class="comment"># unique</span>
+<span class="cmd">sort</span> <span class="flag">-t"," -k4</span> file     <span class="comment"># sort by col 4</span>
+<span class="cmd">sort</span> <span class="flag">-t"," -k4 -rn</span> file <span class="comment"># col4 desc num</span>
+<span class="cmd">uniq</span> file               <span class="comment"># remove dup lines</span>
+<span class="cmd">uniq</span> <span class="flag">-c</span> file            <span class="comment"># count duplicates</span></pre>
+  </div>
+</div>
+
+<!-- PIPES & POWER COMMANDS -->
+<div class="grid" style="margin-top:12px">
+  <div class="card full">
+    <div class="card-title t3">⚡ Pipes & Power One-Liners</div>
+    <div class="three-col">
+      <pre><span class="comment"># Count matching lines</span>
+<span class="cmd">grep</span> <span class="flag">-i</span> <span class="str">"rice"</span> file | <span class="cmd">wc</span> <span class="flag">-l</span>
+
+<span class="comment"># Sum col 4, comma-delimited</span>
+<span class="cmd">awk</span> <span class="flag">-F","</span> <span class="str">'{sum+=$4} END{print sum}'</span> file
+
+<span class="comment"># Sort after cut</span>
+<span class="cmd">cut</span> <span class="flag">-d","</span> <span class="flag">-f1,2</span> file | <span class="cmd">sort</span></pre>
+      <pre><span class="comment"># Unique sorted values of col 1</span>
+<span class="cmd">awk</span> <span class="flag">-F","</span> <span class="str">'{print $1}'</span> file | <span class="cmd">sort</span> <span class="flag">-u</span>
+
+<span class="comment"># Lines containing digits</span>
+<span class="cmd">grep</span> <span class="str">"[0-9]"</span> file | <span class="cmd">awk</span> <span class="str">'{print $1}'</span>
+
+<span class="comment"># Top 5 by col4</span>
+<span class="cmd">sort</span> <span class="flag">-t"," -k4 -rn</span> file | <span class="cmd">head</span> <span class="flag">-5</span></pre>
+      <pre><span class="comment"># Replace & save to new file</span>
+<span class="cmd">sed</span> <span class="str">'s/old/new/g'</span> in.txt > out.txt
+
+<span class="comment"># Multi-step pipe</span>
+<span class="cmd">cat</span> file | <span class="cmd">grep</span> <span class="str">"^R"</span> | <span class="cmd">awk</span> <span class="str">'{print $2}'</span>
+
+<span class="comment"># Find + count unique words</span>
+<span class="cmd">tr</span> <span class="str">' '</span> <span class="str">'\n'</span> < file | <span class="cmd">sort</span> | <span class="cmd">uniq</span> <span class="flag">-c</span></pre>
+    </div>
+  </div>
+</div>
+
+<!-- DIRECTORY STRUCTURE PROGRAM -->
+<div class="grid" style="margin-top:12px">
+  <div class="card">
+    <div class="card-title t1">🌲 Directory Structure Program</div>
+    <pre><span class="cmd">mkdir</span> DE1
+<span class="cmd">cd</span> DE1
+<span class="cmd">mkdir</span> DE{2..4}           <span class="comment"># creates DE2,DE3,DE4</span>
+<span class="cmd">touch</span> F1
+<span class="cmd">touch</span> DE2/F2
+<span class="cmd">touch</span> DE3/F3
+<span class="cmd">touch</span> DE4/F4
+<span class="cmd">ls</span> <span class="flag">-R</span>                   <span class="comment"># verify structure</span>
+<span class="cmd">tree</span>                     <span class="comment"># visual tree view</span></pre>
+    <div class="tip">⚡ Brace expansion: mkdir D{1..5} creates D1 D2 D3 D4 D5</div>
+  </div>
+
+  <!-- MISC COMMANDS -->
+  <div class="card">
+    <div class="card-title t6">🧰 Misc Useful Commands</div>
+    <pre><span class="cmd">echo</span> <span class="str">"Hello World"</span>
+<span class="cmd">echo</span> $HOME, $PATH, $USER
+
+<span class="cmd">find</span> . <span class="flag">-name</span> <span class="str">"*.txt"</span>     <span class="comment"># find files</span>
+<span class="cmd">find</span> . <span class="flag">-type</span> d           <span class="comment"># find dirs</span>
+<span class="cmd">find</span> . <span class="flag">-size</span> +1k          <span class="comment"># files >1KB</span>
+
+<span class="cmd">diff</span> file1 file2         <span class="comment"># compare files</span>
+<span class="cmd">file</span> filename            <span class="comment"># file type</span>
+<span class="cmd">which</span> ls                 <span class="comment"># command path</span>
+<span class="cmd">history</span>                  <span class="comment"># command history</span>
+<span class="cmd">clear</span>                    <span class="comment"># clear terminal</span>
+<span class="cmd">man</span> ls                   <span class="comment"># manual page</span>
+<span class="cmd">ps</span> / <span class="cmd">ps</span> <span class="flag">aux</span>             <span class="comment"># processes</span>
+<span class="cmd">kill</span> PID                 <span class="comment"># kill process</span></pre>
+  </div>
+
+  <!-- TRAPS -->
+  <div class="card">
+    <div class="card-title t2">⚠️ Exam Traps & Edge Cases</div>
+    <table>
+      <tr><th>Trap</th><th>Correct Answer</th></tr>
+      <tr><td>NF vs $NF</td><td>NF = count of fields; $NF = value of last field</td></tr>
+      <tr><td>NR!=1</td><td>Skips header (line 1), NOT line != 1</td></tr>
+      <tr><td>s/a/b/ vs s/a/b/g</td><td>Without g = replaces only first occurrence per line</td></tr>
+      <tr><td>rm -rf</td><td>No undo. Deletes everything instantly</td></tr>
+      <tr><td>cat > file</td><td>OVERWRITES existing content — not appends</td></tr>
+      <tr><td>cut -f vs -c</td><td>-f = field (needs -d), -c = character positions</td></tr>
+      <tr><td>grep -v</td><td>Inverts match — prints lines that do NOT match</td></tr>
+      <tr><td>sort -n vs sort</td><td>Without -n, 10 < 2 (lexicographic). Use -n for numbers</td></tr>
+      <tr><td>chmod 755</td><td>rwxr-xr-x (owner full, others read+exec)</td></tr>
+      <tr><td>$0 in awk</td><td>Entire line (all fields), not field 0</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- SCHEDULING ALGORITHMS -->
+<div style="margin-top:16px; padding: 10px 0 6px; border-top: 1px solid var(--border);">
+  <div style="text-align:center; margin-bottom:14px;">
+    <span style="font-size:11px; text-transform:uppercase; letter-spacing:2px; color:var(--muted);">CPU Scheduling Algorithms — C Programs</span>
+  </div>
+</div>
+
+<div class="grid">
+
+  <!-- FCFS -->
+  <div class="card">
+    <div class="card-title t1">1. FCFS (First Come First Serve)</div>
+    <pre><span class="kw">#include</span>&lt;stdio.h&gt;
+<span class="kw">int</span> main(){
+  <span class="kw">int</span> bt[<span class="num">10</span>],wt[<span class="num">10</span>],p[<span class="num">10</span>],i,j,n,total=<span class="num">0</span>;
+  <span class="kw">float</span> avg;
+  printf(<span class="str">"Enter number of processes: "</span>);
+  scanf(<span class="str">"%d"</span>,&n);
+  <span class="kw">for</span>(i=<span class="num">1</span>;i&lt;=n;i++){
+    printf(<span class="str">"BT for P%d: "</span>,i);
+    scanf(<span class="str">"%d"</span>,&bt[i]); p[i]=i;
+  }
+  wt[<span class="num">1</span>]=<span class="num">0</span>;
+  <span class="kw">for</span>(i=<span class="num">2</span>;i&lt;=n;i++){
+    wt[i]=<span class="num">0</span>;
+    <span class="kw">for</span>(j=<span class="num">1</span>;j&lt;i;j++) wt[i]+=bt[j];
+    total+=wt[i];
+  }
+  printf(<span class="str">"P\tBT\tWT\n"</span>);
+  <span class="kw">for</span>(i=<span class="num">1</span>;i&lt;=n;i++)
+    printf(<span class="str">"P%d\t%d\t%d\n"</span>,p[i],bt[i],wt[i]);
+  avg=(<span class="kw">float</span>)total/n;
+  printf(<span class="str">"Total WT: %d\nAvg WT: %.2f\n"</span>,total,avg);
+}</pre>
+    <div class="tip">WTᵢ = BT₁ + BT₂ + ... + BTᵢ₋₁ · No sorting needed · Arrival order = execution order</div>
+  </div>
+
+  <!-- SJF -->
+  <div class="card">
+    <div class="card-title t3">2. SJF (Shortest Job First)</div>
+    <pre><span class="kw">#include</span>&lt;stdio.h&gt;
+<span class="kw">int</span> main(){
+  <span class="kw">int</span> bt[<span class="num">10</span>],p[<span class="num">10</span>],wt[<span class="num">10</span>],temp,i,j,n,total=<span class="num">0</span>;
+  <span class="kw">float</span> avg;
+  printf(<span class="str">"Enter total number of processes: "</span>);
+  scanf(<span class="str">"%d"</span>,&n);
+  <span class="kw">for</span>(i=<span class="num">0</span>;i&lt;n;i++){
+    printf(<span class="str">"BT for P%d: "</span>,i);
+    scanf(<span class="str">"%d"</span>,&bt[i]); p[i]=i;
+  }
+  <span class="comment">/* Bubble sort by burst time (ascending) */</span>
+  <span class="kw">for</span>(i=<span class="num">0</span>;i&lt;n-<span class="num">1</span>;i++)
+    <span class="kw">for</span>(j=<span class="num">0</span>;j&lt;n-i-<span class="num">1</span>;j++)
+      <span class="kw">if</span>(bt[j]>bt[j+<span class="num">1</span>]){
+        temp=bt[j];bt[j]=bt[j+<span class="num">1</span>];bt[j+<span class="num">1</span>]=temp;
+        temp=p[j];p[j]=p[j+<span class="num">1</span>];p[j+<span class="num">1</span>]=temp;
+      }
+  wt[<span class="num">0</span>]=<span class="num">0</span>;
+  <span class="kw">for</span>(i=<span class="num">1</span>;i&lt;n;i++){
+    wt[i]=<span class="num">0</span>;
+    <span class="kw">for</span>(j=<span class="num">0</span>;j&lt;i;j++) wt[i]+=bt[j];
+    total+=wt[i];
+  }
+  printf(<span class="str">"P\tBT\tWT\n"</span>);
+  <span class="kw">for</span>(i=<span class="num">0</span>;i&lt;n;i++)
+    printf(<span class="str">"P%d\t%d\t%d\n"</span>,p[i],bt[i],wt[i]);
+  avg=(<span class="kw">float</span>)total/n;
+  printf(<span class="str">"Total WT: %d\nAvg WT: %.2f\n"</span>,total,avg);
+}</pre>
+    <div class="tip">Sort by BT ascending → then calculate WT same as FCFS · Gives minimum average WT (optimal)</div>
+  </div>
+
+  <!-- Priority -->
+  <div class="card">
+    <div class="card-title t2">3. Priority Scheduling</div>
+    <pre><span class="kw">#include</span>&lt;stdio.h&gt;
+<span class="kw">int</span> main(){
+  <span class="kw">int</span> bt[<span class="num">10</span>],pr[<span class="num">10</span>],wt[<span class="num">10</span>],p[<span class="num">10</span>],i,temp,j,n,total=<span class="num">0</span>;
+  <span class="kw">float</span> avg;
+  printf(<span class="str">"Enter number of processes: "</span>);
+  scanf(<span class="str">"%d"</span>,&n);
+  <span class="kw">for</span>(i=<span class="num">0</span>;i&lt;n;i++){
+    printf(<span class="str">"BT & Priority for P%d: "</span>,i);
+    scanf(<span class="str">"%d %d"</span>,&bt[i],&pr[i]); p[i]=i;
+  }
+  <span class="comment">/* Bubble sort by priority (ascending = lower num = higher prio) */</span>
+  <span class="kw">for</span>(i=<span class="num">0</span>;i&lt;n-<span class="num">1</span>;i++)
+    <span class="kw">for</span>(j=<span class="num">0</span>;j&lt;n-i-<span class="num">1</span>;j++)
+      <span class="kw">if</span>(pr[j]>pr[j+<span class="num">1</span>]){
+        temp=pr[j];pr[j]=pr[j+<span class="num">1</span>];pr[j+<span class="num">1</span>]=temp;
+        temp=bt[j];bt[j]=bt[j+<span class="num">1</span>];bt[j+<span class="num">1</span>]=temp;
+        temp=p[j];p[j]=p[j+<span class="num">1</span>];p[j+<span class="num">1</span>]=temp;
+      }
+  wt[<span class="num">0</span>]=<span class="num">0</span>;
+  <span class="kw">for</span>(i=<span class="num">1</span>;i&lt;n;i++){
+    wt[i]=<span class="num">0</span>;
+    <span class="kw">for</span>(j=<span class="num">0</span>;j&lt;i;j++) wt[i]+=bt[j];
+    total+=wt[i];
+  }
+  printf(<span class="str">"P\tBT\tWT\n"</span>);
+  <span class="kw">for</span>(i=<span class="num">0</span>;i&lt;n;i++)
+    printf(<span class="str">"P%d\t%d\t%d\n"</span>,p[i],bt[i],wt[i]);
+  avg=(<span class="kw">float</span>)total/n;
+  printf(<span class="str">"Total WT: %d\nAvg WT: %.2f\n"</span>,total,avg);
+}</pre>
+    <div class="tip">Lower priority number = runs first · Sort by pr[] ascending · Same WT formula as FCFS/SJF after sorting</div>
+  </div>
+</div>
+
+<!-- ROUND ROBIN -->
+<div class="grid" style="margin-top:12px">
+  <div class="card wide">
+    <div class="card-title t4">4. Round Robin (with Time Quantum)</div>
+    <pre><span class="kw">#include</span>&lt;stdio.h&gt;
+<span class="kw">int</span> main(){
+  <span class="kw">int</span> bt[<span class="num">10</span>],wt[<span class="num">10</span>],rt[<span class="num">10</span>],p[<span class="num">10</span>],ct[<span class="num">10</span>],done,i,n,tq,time=<span class="num">0</span>,total=<span class="num">0</span>;
+  <span class="kw">float</span> avg;
+  printf(<span class="str">"Enter number of processes: "</span>); scanf(<span class="str">"%d"</span>,&n);
+  <span class="kw">for</span>(i=<span class="num">1</span>;i&lt;=n;i++){
+    printf(<span class="str">"BT for P%d: "</span>,i); scanf(<span class="str">"%d"</span>,&bt[i]);
+    rt[i]=bt[i]; p[i]=i;         <span class="comment">// rt = remaining time</span>
+  }
+  printf(<span class="str">"Enter time quantum: "</span>); scanf(<span class="str">"%d"</span>,&tq);
+  <span class="kw">while</span>(<span class="num">1</span>){
+    done=<span class="num">1</span>;
+    <span class="kw">for</span>(i=<span class="num">1</span>;i&lt;=n;i++){
+      <span class="kw">if</span>(rt[i]><span class="num">0</span>){
+        done=<span class="num">0</span>;
+        <span class="kw">if</span>(rt[i]>tq){ time+=tq; rt[i]-=tq; }
+        <span class="kw">else</span>{ time+=rt[i]; wt[i]=time-bt[i]; ct[i]=time; rt[i]=<span class="num">0</span>; }
+        printf(<span class="str">"P%d "</span>,i);
+      }
+    }
+    <span class="kw">if</span>(done==<span class="num">1</span>) <span class="kw">break</span>;
+  }
+  printf(<span class="str">"\nP\tBT\tWT\n"</span>);
+  <span class="kw">for</span>(i=<span class="num">1</span>;i&lt;=n;i++){ printf(<span class="str">"P%d\t%d\t%d\n"</span>,p[i],bt[i],wt[i]); total+=wt[i]; }
+  avg=(<span class="kw">float</span>)total/n;
+  printf(<span class="str">"Total WT: %d\nAvg WT: %.2f\n"</span>,total,avg);
+}</pre>
+    <div class="tip">rt[] = remaining time copy of bt[]. WT = completion time − burst time. Each process gets tq units per round. Loops until all rt[] = 0.</div>
+  </div>
+
+  <!-- ALGO COMPARISON -->
+  <div class="card">
+    <div class="card-title t6">📊 Algorithm Comparison</div>
+    <table>
+      <tr><th>Algorithm</th><th>Key Idea</th><th>Preemptive?</th></tr>
+      <tr><td>FCFS</td><td>Arrival order, no sorting</td><td>No</td></tr>
+      <tr><td>SJF</td><td>Sort by BT ascending</td><td>No (here)</td></tr>
+      <tr><td>Priority</td><td>Sort by PR ascending</td><td>No (here)</td></tr>
+      <tr><td>Round Robin</td><td>Time quantum, circular</td><td>Yes</td></tr>
+    </table>
+    <div class="divider"></div>
+    <div class="section-label">Formulas</div>
+    <pre><span class="comment">Waiting Time (WT):</span>
+WT[0] = 0
+WT[i] = WT[i-1] + BT[i-1]
+
+<span class="comment">Turnaround Time (TAT):</span>
+TAT[i] = WT[i] + BT[i]
+
+<span class="comment">Average WT:</span>
+Avg = (float)total / n
+
+<span class="comment">Round Robin WT:</span>
+WT[i] = completion_time - BT[i]</pre>
+    <div class="warn">⚠ Arrays in FCFS start at index 1. SJF/Priority start at 0. Don't mix them!</div>
+  </div>
+</div>
+
+<!-- BOTTOM QUICK REF -->
+<div class="grid" style="margin-top:12px">
+  <div class="card full">
+    <div class="card-title t3">🔥 Last-Minute Quick Reference</div>
+    <div class="three-col">
+      <div>
+        <div class="section-label">AWK Must-Know</div>
+        <div class="tag-row">
+          <span class="tag">$NF = last col</span>
+          <span class="tag">$(NF-1) = 2nd last</span>
+          <span class="tag">NR!=1 = skip header</span>
+          <span class="tag">-F"," = csv delimiter</span>
+          <span class="tag">sum+=$4 = accumulate</span>
+          <span class="tag">END{} = after all lines</span>
+          <span class="tag">BEGIN{} = before file</span>
+          <span class="tag">printf "%d" = formatted</span>
+        </div>
+      </div>
+      <div>
+        <div class="section-label">SED Must-Know</div>
+        <div class="tag-row">
+          <span class="tag">s/a/b/g = global replace</span>
+          <span class="tag">$d = delete last line</span>
+          <span class="tag">1d = delete first line</span>
+          <span class="tag">/^$/d = remove blanks</span>
+          <span class="tag">-n '3,6p' = print range</span>
+          <span class="tag">-e = multiple commands</span>
+          <span class="tag">2s/a/b/ = line-specific</span>
+        </div>
+      </div>
+      <div>
+        <div class="section-label">GREP Must-Know</div>
+        <div class="tag-row">
+          <span class="tag">-i = ignore case</span>
+          <span class="tag">-v = NOT match</span>
+          <span class="tag">-n = show line numbers</span>
+          <span class="tag">-c = count matches</span>
+          <span class="tag">-E = extended regex</span>
+          <span class="tag">^pattern = line start</span>
+          <span class="tag">pattern$ = line end</span>
+          <span class="tag">-w = whole word only</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center; padding: 16px 0 8px; color: var(--muted); font-size: 11px; letter-spacing: 1px; text-transform: uppercase;">
+  Good luck on your exam! 🚀
+</div>
+
+</body>
+</html>
