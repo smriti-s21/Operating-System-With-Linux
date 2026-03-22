@@ -1,260 +1,1566 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>CPU Scheduling Algorithms</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operating Systems - IA1 Notes</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+            margin: 0;
             padding: 20px;
+            background-color: #f8f9fa;
+            color: #333;
         }
         .container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
             background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            overflow: hidden;
-        }
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
             padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
             text-align: center;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
         }
-        .header h1 {
-            font-size: 32px;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+        h2 {
+            color: #e74c3c;
+            border-left: 5px solid #e74c3c;
+            padding-left: 15px;
+            margin-top: 40px;
         }
-        .header .subtitle {
-            font-size: 18px;
-            opacity: 0.9;
-            margin-top: 5px;
-        }
-        .student-info {
-            background: rgba(255,255,255,0.1);
-            padding: 15px;
-            margin-top: 15px;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-        .student-info p {
-            margin: 5px 0;
-        }
-        .content {
-            padding: 40px;
-        }
-        label {
-            display: block;
-            margin-top: 20px;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #333;
-            font-size: 14px;
-        }
-        select, input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: all 0.3s;
-        }
-        select:focus, input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
-        }
-        button {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 25px;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(102,126,234,0.4);
-        }
-        button:active {
-            transform: translateY(0);
-        }
-        .result {
+        h3 {
+            color: #27ae60;
             margin-top: 30px;
-            animation: fadeIn 0.5s;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        h4 {
+            color: #8e44ad;
+            margin-top: 25px;
         }
-        .result h3 {
-            color: #667eea;
+        .unit {
+            margin-bottom: 50px;
+            border: 2px solid #ecf0f1;
+            padding: 25px;
+            border-radius: 8px;
+        }
+        .diagram {
+            background: #ecf0f1;
+            padding: 20px;
             margin: 20px 0;
-            font-size: 18px;
+            border-radius: 5px;
+            text-align: center;
+            border-left: 4px solid #3498db;
+        }
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+            white-space: pre-line;
+            line-height: 1.4;
+        }
+        .important {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .example {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            border-radius: 8px;
-            overflow: hidden;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
         }
         th {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-color: #3498db;
             color: white;
-            padding: 15px;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        ul, ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        li {
+            margin: 8px 0;
+        }
+        .process-state-diagram {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 30px 0;
+        }
+        .state {
+            background: #3498db;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 25px;
+            margin: 10px;
             text-align: center;
-            font-weight: 600;
-            font-size: 14px;
+            font-weight: bold;
         }
-        td {
-            padding: 12px;
-            text-align: center;
-            border-bottom: 1px solid #f0f0f0;
-            font-size: 14px;
-        }
-        tr:hover {
-            background: #f8f9ff;
-        }
-        tr:last-child td {
-            border-bottom: none;
-        }
-        .hidden { display: none; }
-        .input-group {
-            background: #f8f9ff;
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 10px;
+        .arrow {
+            font-size: 24px;
+            color: #e74c3c;
+            margin: 0 10px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>CPU Scheduling Algorithms</h1>
-            <div class="subtitle">Operating System with Linux Project</div>
-            <div class="student-info">
-                <p><strong>SMRITI S</strong></p>
-                <p>Register Number: 2313711058046</p>
-                <p style="margin-top: 10px;">
-                    <a href="../ia1.html" style="color: white; text-decoration: none; background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 5px; margin-right: 10px;">📚 Study Notes</a>
-                    <a href="../sample-questions.html" style="color: white; text-decoration: none; background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 5px;">❓ Sample Questions</a>
-                </p>
-            </div>
+        <h1>Operating Systems - IA1 Comprehensive Notes</h1>
+        <p style="text-align: center; font-weight: bold; color: #2c3e50; font-size: 18px; margin-bottom: 10px;">
+            Prepared by: Smriti
+        </p>
+        <p style="text-align: center; font-style: italic; color: #7f8c8d;">
+            Based on Silberschatz, A., Galvin, P. B., & Gagne, G. (2011). Operating System Concepts (6th ed.)
+        </p>
+        
+        <div style="text-align: center; margin: 20px 0; display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+            <a href="sample-questions.html" style="background: #e74c3c; color: white; padding: 12px 25px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">❓ Sample Questions & Answers</a>
+            <a href="endsem.html" style="background: #27ae60; color: white; padding: 12px 25px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">📋 Endsem Cheatsheet</a>
         </div>
-        <div class="content">
-            <div class="input-group">
-                <label>Select Scheduling Algorithm:</label>
-                <select id="algorithm" onchange="toggleFields()">
-                    <option value="fcfs">First Come First Serve (FCFS)</option>
-                    <option value="sjf">Shortest Job First (SJF)</option>
-                    <option value="srtf">Shortest Remaining Time First (SRTF)</option>
-                    <option value="rr">Round Robin (RR)</option>
-                    <option value="priority_np">Priority (Non-Preemptive)</option>
-                    <option value="priority_p">Priority (Preemptive)</option>
-                </select>
-                
-                <label>Arrival Times (comma-separated):</label>
-                <input type="text" id="arrival" value="0, 2, 5, 6, 4" placeholder="e.g., 0, 2, 5, 6, 4">
-                
-                <label>Burst Times (comma-separated):</label>
-                <input type="text" id="burst" value="2, 3, 5, 6, 7" placeholder="e.g., 2, 3, 5, 6, 7">
-                
-                <div id="quantumField" class="hidden">
-                    <label>Time Quantum:</label>
-                    <input type="number" id="quantum" value="2" min="1">
-                </div>
-                
-                <div id="priorityField" class="hidden">
-                    <label>Priority (comma-separated, lower number = higher priority):</label>
-                    <input type="text" id="priority" value="2, 1, 3, 4, 5" placeholder="e.g., 2, 1, 3, 4, 5">
-                </div>
-            </div>
-            
-            <button onclick="calculate()">Calculate Schedule</button>
+        
+        <div style="background: #f8d7da; border: 2px solid #f5c6cb; color: #721c24; padding: 20px; margin: 20px 0; border-radius: 8px; text-align: center;">
+            <h3 style="color: #721c24; margin-top: 0;">⚠️ IMPORTANT WARNING ⚠️</h3>
+            <p style="font-weight: bold; font-size: 16px; margin-bottom: 10px;">
+                The diagrams and visual representations in these notes are simplified for understanding purposes.
+            </p>
+            <p style="font-size: 14px; margin: 0;">
+                <strong>Please refer to the original textbook (Silberschatz, Galvin & Gagne - Operating System Concepts) for accurate and complete diagrams, figures, and visual content for your exam preparation.</strong>
+            </p>
+        </div>
 
-            <div id="result" class="result"></div>
+        <!-- UNIT I -->
+        <div class="unit">
+            <h2>UNIT I - Introduction and Process Management</h2>
+
+            <h3>1. Types of Operating Systems</h3>
+
+            <h4>1.1 Simple Batch Systems</h4>
+            <div class="important">
+                <strong>Key Points:</strong>
+                <ul>
+                    <li>Early computer systems operated by operators only</li>
+                    <li>No user interaction during execution</li>
+                    <li>Jobs submitted using punch cards</li>
+                    <li>High turnaround time</li>
+                </ul>
+            </div>
+
+            <p><strong>Characteristics:</strong></p>
+            <ul>
+                <li><strong>Job Submission:</strong> Programs, input data, and control information submitted as punch cards</li>
+                <li><strong>Sequential Execution:</strong> Jobs executed one after another</li>
+                <li><strong>No Interaction:</strong> Users cannot interact with programs during execution</li>
+                <li><strong>Automatic Job Sequencing:</strong> OS automatically transfers control from one job to the next</li>
+            </ul>
+
+            <div class="diagram">
+                <h4>Simple Batch System Structure</h4>
+                <pre>
+User → [Punch Cards] → Operator → [Job Queue] → CPU → [Output] → User
+                                      ↓
+                                 [OS in Memory]
+                </pre>
+            </div>
+
+            <p><strong>Problems:</strong></p>
+            <ul>
+                <li><strong>CPU Idle Time:</strong> CPU much faster than I/O devices</li>
+                <li><strong>Poor Resource Utilization:</strong> CPU waits for I/O operations</li>
+                <li><strong>Solution - Spooling:</strong> Simultaneous Peripheral Operation On-Line</li>
+            </ul>
+
+            <h4>1.2 Multiprogrammed Batch Systems</h4>
+            <div class="important">
+                <strong>Evolution from Simple Batch:</strong> Multiple jobs kept in memory simultaneously to increase CPU utilization
+            </div>
+
+            <p><strong>Key Concepts:</strong></p>
+            <ul>
+                <li><strong>Job Pool:</strong> Collection of jobs stored on disk ready for execution</li>
+                <li><strong>Memory Management:</strong> Multiple jobs reside in main memory</li>
+                <li><strong>CPU Switching:</strong> When one job waits for I/O, CPU switches to another job</li>
+                <li><strong>Job Scheduling:</strong> OS decides which job to load into memory</li>
+                <li><strong>CPU Scheduling:</strong> OS decides which ready job gets CPU</li>
+            </ul>
+
+            <div class="diagram">
+                <h4>Multiprogramming Concept</h4>
+                <pre>
+Memory Layout:
+┌─────────────┐
+│     OS      │
+├─────────────┤
+│   Job 1     │ ← Currently executing
+├─────────────┤
+│   Job 2     │ ← Waiting for I/O
+├─────────────┤
+│   Job 3     │ ← Ready to execute
+└─────────────┘
+
+CPU switches between jobs to maximize utilization
+                </pre>
+            </div>
+
+            <h4>1.3 Time-Sharing Systems</h4>
+            <div class="important">
+                <strong>Interactive Computing:</strong> Extension of multiprogramming where CPU switches between jobs very frequently
+            </div>
+
+            <p><strong>Characteristics:</strong></p>
+            <ul>
+                <li><strong>Interactive:</strong> Direct communication between user and computer</li>
+                <li><strong>Short Response Time:</strong> Few seconds or less</li>
+                <li><strong>Online File System:</strong> Files stored and accessed online</li>
+                <li><strong>Multiple Users:</strong> Many users can use system simultaneously</li>
+            </ul>
+
+            <div class="example">
+                <strong>Time-Sharing vs Batch Systems:</strong>
+                <table>
+                    <tr>
+                        <th>Aspect</th>
+                        <th>Batch Systems</th>
+                        <th>Time-Sharing Systems</th>
+                    </tr>
+                    <tr>
+                        <td>User Interaction</td>
+                        <td>No interaction</td>
+                        <td>Interactive</td>
+                    </tr>
+                    <tr>
+                        <td>Response Time</td>
+                        <td>Long turnaround time</td>
+                        <td>Short response time</td>
+                    </tr>
+                    <tr>
+                        <td>Suitable for</td>
+                        <td>Large jobs</td>
+                        <td>Short commands</td>
+                    </tr>
+                    <tr>
+                        <td>Debugging</td>
+                        <td>Static debugging</td>
+                        <td>Interactive debugging</td>
+                    </tr>
+                </table>
+            </div>
+
+            <h4>1.4 Personal Computer Systems</h4>
+            <ul>
+                <li><strong>Single User:</strong> Dedicated to individual users</li>
+                <li><strong>User Convenience:</strong> Focus on ease of use rather than CPU utilization</li>
+                <li><strong>Evolution:</strong> From simple single-tasking to modern multitasking systems</li>
+                <li><strong>Examples:</strong> MS-DOS → Windows, Macintosh OS</li>
+            </ul>
+
+            <h4>1.5 Parallel Systems</h4>
+            <div class="important">
+                <strong>Multiprocessor Systems:</strong> More than one processor sharing bus, clock, memory, and peripherals
+            </div>
+
+            <p><strong>Advantages:</strong></p>
+            <ul>
+                <li><strong>Increased Throughput:</strong> More work in less time</li>
+                <li><strong>Economy of Scale:</strong> Shared peripherals and resources</li>
+                <li><strong>Increased Reliability:</strong> Graceful degradation</li>
+            </ul>
+
+            <p><strong>Types:</strong></p>
+            <ul>
+                <li><strong>Symmetric Multiprocessing (SMP):</strong> All processors run identical OS copies</li>
+                <li><strong>Asymmetric Multiprocessing:</strong> Master-slave relationship</li>
+            </ul>
+
+            <div class="diagram">
+                <h4>SMP vs AMP</h4>
+                <pre>
+Symmetric Multiprocessing (SMP):
+CPU1 ←→ [Shared Memory] ←→ CPU2
+  ↕                        ↕
+[I/O]                    [I/O]
+
+Asymmetric Multiprocessing (AMP):
+Master CPU → [Controls] → Slave CPUs
+     ↓
+[All I/O Operations]
+                </pre>
+            </div>
+
+            <h4>1.6 Distributed Systems</h4>
+            <div class="important">
+                <strong>Loosely Coupled:</strong> Processors don't share memory or clock, communicate via networks
+            </div>
+
+            <p><strong>Advantages:</strong></p>
+            <ul>
+                <li><strong>Resource Sharing:</strong> Access remote resources</li>
+                <li><strong>Computation Speedup:</strong> Load sharing across sites</li>
+                <li><strong>Reliability:</strong> Fault tolerance through redundancy</li>
+                <li><strong>Communication:</strong> Information exchange between sites</li>
+            </ul>
+
+            <h4>1.7 Real-Time Systems</h4>
+            <div class="important">
+                <strong>Time Constraints:</strong> Correctness depends on producing results within specified time limits
+            </div>
+
+            <p><strong>Types:</strong></p>
+            <ul>
+                <li><strong>Hard Real-Time:</strong> Guarantee critical tasks complete within deadlines</li>
+                <li><strong>Soft Real-Time:</strong> Priority to critical tasks but no guarantee</li>
+            </ul>
+
+            <div class="example">
+                <strong>Real-Time System Applications:</strong>
+                <ul>
+                    <li>Industrial control systems</li>
+                    <li>Medical imaging systems</li>
+                    <li>Automobile engine control</li>
+                    <li>Robotics</li>
+                    <li>Defense systems</li>
+                </ul>
+            </div>
+
+            <h3>2. OS Structure</h3>
+
+            <h4>2.1 System Components</h4>
+
+            <p><strong>Process Management:</strong></p>
+            <ul>
+                <li>Create and delete processes</li>
+                <li>Suspend and resume processes</li>
+                <li>Process synchronization and communication</li>
+                <li>Deadlock handling</li>
+            </ul>
+
+            <p><strong>Main Memory Management:</strong></p>
+            <ul>
+                <li>Track memory usage</li>
+                <li>Allocate and deallocate memory</li>
+                <li>Decide which processes to load</li>
+            </ul>
+
+            <p><strong>File Management:</strong></p>
+            <ul>
+                <li>Create and delete files and directories</li>
+                <li>Support primitives for file manipulation</li>
+                <li>Map files to secondary storage</li>
+                <li>Backup files</li>
+            </ul>
+
+            <p><strong>I/O System Management:</strong></p>
+            <ul>
+                <li>Buffer-cache system</li>
+                <li>General device-driver interface</li>
+                <li>Drivers for specific hardware devices</li>
+            </ul>
+
+            <h4>2.2 Operating System Services</h4>
+
+            <div class="diagram">
+                <h4>OS Services Overview</h4>
+                <pre>
+User Interface
+     ↓
+┌─────────────────────────────────────┐
+│  Program    I/O        File         │
+│ Execution Operations Manipulation   │
+├─────────────────────────────────────┤
+│ Communications  Error Detection     │
+├─────────────────────────────────────┤
+│ Resource    Accounting  Protection  │
+│Allocation              & Security   │
+└─────────────────────────────────────┘
+            Hardware
+                </pre>
+            </div>
+
+            <p><strong>User-Oriented Services:</strong></p>
+            <ul>
+                <li><strong>Program Execution:</strong> Load and run programs</li>
+                <li><strong>I/O Operations:</strong> File and device I/O</li>
+                <li><strong>File Manipulation:</strong> Read, write, create, delete files</li>
+                <li><strong>Communications:</strong> Process communication</li>
+                <li><strong>Error Detection:</strong> Hardware and software error handling</li>
+            </ul>
+
+            <p><strong>System-Oriented Services:</strong></p>
+            <ul>
+                <li><strong>Resource Allocation:</strong> CPU, memory, files, I/O devices</li>
+                <li><strong>Accounting:</strong> Track resource usage</li>
+                <li><strong>Protection and Security:</strong> Access control and authentication</li>
+            </ul>
+
+            <h4>2.3 System Structure</h4>
+
+            <p><strong>Simple Structure (MS-DOS):</strong></p>
+            <ul>
+                <li>No clear modular design</li>
+                <li>Applications can access hardware directly</li>
+                <li>Difficult to maintain and extend</li>
+            </ul>
+
+            <div class="diagram">
+                <h4>MS-DOS Layer Structure</h4>
+                <pre>
+┌─────────────────────┐
+│  Application        │
+│    Programs         │
+├─────────────────────┤
+│  Resident System    │
+│    Programs         │
+├─────────────────────┤
+│   MS-DOS Device     │
+│     Drivers         │
+├─────────────────────┤
+│    ROM BIOS         │
+│  Device Drivers     │
+└─────────────────────┘
+                </pre>
+            </div>
+
+            <p><strong>Layered Approach:</strong></p>
+            <ul>
+                <li><strong>Layer 0:</strong> Hardware</li>
+                <li><strong>Layer N:</strong> User interface</li>
+                <li>Each layer uses services of lower layers only</li>
+            </ul>
+
+            <div class="important">
+                <strong>Advantages of Layered Structure:</strong>
+                <ul>
+                    <li>Modularity and abstraction</li>
+                    <li>Easy debugging and verification</li>
+                    <li>Clear separation of concerns</li>
+                </ul>
+                <strong>Disadvantages:</strong>
+                <ul>
+                    <li>Difficult to define layers appropriately</li>
+                    <li>Performance overhead</li>
+                    <li>Less efficient than other structures</li>
+                </ul>
+            </div>
+
+            <h3>3. Process Management</h3>
+
+            <h4>3.1 Process Concept</h4>
+            <div class="important">
+                <strong>Process:</strong> A program in execution. It includes program code, current activity, program counter, and registers.
+            </div>
+
+            <p><strong>Process vs Program:</strong></p>
+            <ul>
+                <li><strong>Program:</strong> Passive entity (file on disk)</li>
+                <li><strong>Process:</strong> Active entity with program counter and resources</li>
+            </ul>
+
+            <p><strong>Process Components:</strong></p>
+            <ul>
+                <li><strong>Text Section:</strong> Program code</li>
+                <li><strong>Data Section:</strong> Global variables</li>
+                <li><strong>Heap:</strong> Dynamically allocated memory</li>
+                <li><strong>Stack:</strong> Temporary data (function parameters, return addresses, local variables)</li>
+            </ul>
+
+            <h4>3.2 Process State</h4>
+
+            <div class="process-state-diagram">
+                <div class="state">NEW</div>
+                <div class="arrow">→</div>
+                <div class="state">READY</div>
+                <div class="arrow">→</div>
+                <div class="state">RUNNING</div>
+                <div class="arrow">→</div>
+                <div class="state">TERMINATED</div>
+            </div>
+
+            <div style="text-align: center; margin: 20px 0;">
+                <div class="arrow" style="transform: rotate(90deg);">↓</div>
+                <div class="state" style="margin: 10px auto;">WAITING</div>
+                <div class="arrow" style="transform: rotate(-90deg);">↑</div>
+            </div>
+
+            <p><strong>Process States:</strong></p>
+            <ul>
+                <li><strong>New:</strong> Process is being created</li>
+                <li><strong>Ready:</strong> Process is waiting to be assigned to processor</li>
+                <li><strong>Running:</strong> Instructions are being executed</li>
+                <li><strong>Waiting:</strong> Process is waiting for some event (I/O completion)</li>
+                <li><strong>Terminated:</strong> Process has finished execution</li>
+            </ul>
+
+            <h4>3.3 Process Control Block (PCB)</h4>
+            <div class="important">
+                <strong>PCB:</strong> Data structure containing all information about a process
+            </div>
+
+            <div class="diagram">
+                <h4>Process Control Block Structure</h4>
+                <pre>
+┌─────────────────────┐
+│    Process State    │
+├─────────────────────┤
+│   Process Number    │
+├─────────────────────┤
+│  Program Counter    │
+├─────────────────────┤
+│     Registers       │
+├─────────────────────┤
+│   Memory Limits     │
+├─────────────────────┤
+│  List of Open Files │
+├─────────────────────┤
+│ CPU Scheduling Info │
+├─────────────────────┤
+│ Memory Management   │
+│     Information     │
+├─────────────────────┤
+│ Accounting Info     │
+├─────────────────────┤
+│   I/O Status Info   │
+└─────────────────────┘
+                </pre>
+            </div>
+
+            <p><strong>PCB Contents:</strong></p>
+            <ul>
+                <li><strong>Process State:</strong> Current state of process</li>
+                <li><strong>Program Counter:</strong> Address of next instruction</li>
+                <li><strong>CPU Registers:</strong> Accumulators, index registers, stack pointers</li>
+                <li><strong>CPU Scheduling Information:</strong> Priority, scheduling queue pointers</li>
+                <li><strong>Memory Management Information:</strong> Base/limit registers, page tables</li>
+                <li><strong>Accounting Information:</strong> CPU time used, time limits</li>
+                <li><strong>I/O Status Information:</strong> List of I/O devices, open files</li>
+            </ul>
+
+            <h4>3.4 Process Scheduling</h4>
+
+            <p><strong>Objectives:</strong></p>
+            <ul>
+                <li><strong>Multiprogramming:</strong> Keep CPU busy at all times</li>
+                <li><strong>Time-sharing:</strong> Switch CPU frequently for user interaction</li>
+            </ul>
+
+            <p><strong>Scheduling Queues:</strong></p>
+            <ul>
+                <li><strong>Job Queue:</strong> All processes in the system</li>
+                <li><strong>Ready Queue:</strong> Processes in memory, ready to execute</li>
+                <li><strong>Device Queues:</strong> Processes waiting for I/O devices</li>
+            </ul>
+
+            <div class="diagram">
+                <h4>Process Scheduling Diagram</h4>
+                <pre>
+[Job Queue] → [Long-term Scheduler] → [Ready Queue]
+                                           ↓
+                                    [CPU Scheduler]
+                                           ↓
+                                        [CPU] → [Terminate]
+                                           ↓
+                                    [I/O Queue] → [I/O] → [Ready Queue]
+                </pre>
+            </div>
+
+            <p><strong>Types of Schedulers:</strong></p>
+            <ul>
+                <li><strong>Long-term Scheduler (Job Scheduler):</strong>
+                    <ul>
+                        <li>Selects processes from mass storage</li>
+                        <li>Controls degree of multiprogramming</li>
+                        <li>Executes infrequently</li>
+                    </ul>
+                </li>
+                <li><strong>Short-term Scheduler (CPU Scheduler):</strong>
+                    <ul>
+                        <li>Selects process from ready queue</li>
+                        <li>Executes very frequently (milliseconds)</li>
+                        <li>Must be extremely fast</li>
+                    </ul>
+                </li>
+                <li><strong>Medium-term Scheduler:</strong>
+                    <ul>
+                        <li>Swapping - removes processes from memory</li>
+                        <li>Reduces degree of multiprogramming</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4>3.5 Context Switch</h4>
+            <div class="important">
+                <strong>Context Switch:</strong> Switching CPU from one process to another by saving and restoring process states
+            </div>
+
+            <p><strong>Steps:</strong></p>
+            <ol>
+                <li>Save state of current process in its PCB</li>
+                <li>Load saved state of new process from its PCB</li>
+                <li>Resume execution of new process</li>
+            </ol>
+
+            <p><strong>Context Switch Time:</strong></p>
+            <ul>
+                <li>Pure overhead - no useful work done</li>
+                <li>Depends on hardware support</li>
+                <li>Typical time: 1-1000 microseconds</li>
+            </ul>
+
+            <h4>3.6 Cooperating Processes</h4>
+
+            <p><strong>Types of Processes:</strong></p>
+            <ul>
+                <li><strong>Independent Process:</strong> Cannot affect or be affected by others</li>
+                <li><strong>Cooperating Process:</strong> Can affect or be affected by other processes</li>
+            </ul>
+
+            <p><strong>Reasons for Cooperation:</strong></p>
+            <ul>
+                <li>Information sharing</li>
+                <li>Computation speedup</li>
+                <li>Modularity</li>
+                <li>Convenience</li>
+            </ul>
+
+            <div class="example">
+                <strong>Producer-Consumer Problem:</strong>
+                <ul>
+                    <li><strong>Producer:</strong> Generates data</li>
+                    <li><strong>Consumer:</strong> Consumes data</li>
+                    <li><strong>Buffer:</strong> Shared storage (bounded/unbounded)</li>
+                    <li><strong>Synchronization:</strong> Required to prevent race conditions</li>
+                </ul>
+            </div>
+
+            <h4>3.7 Threads</h4>
+            <div class="important">
+                <strong>Thread:</strong> Lightweight process - allows multiple execution paths within a single process
+            </div>
+
+            <p><strong>Benefits:</strong></p>
+            <ul>
+                <li>Responsiveness</li>
+                <li>Resource sharing</li>
+                <li>Economy</li>
+                <li>Utilization of multiprocessor architectures</li>
+            </ul>
+
+            <h3>4. CPU Scheduling</h3>
+
+            <h4>4.1 Basic Concepts</h4>
+
+            <p><strong>CPU-I/O Burst Cycle:</strong></p>
+            <ul>
+                <li>Process execution alternates between CPU burst and I/O burst</li>
+                <li>CPU-bound processes: Long CPU bursts</li>
+                <li>I/O-bound processes: Short CPU bursts</li>
+            </ul>
+
+            <div class="diagram">
+                <h4>CPU Burst Distribution</h4>
+                <pre>
+Frequency
+    ↑
+    │ ████
+    │ ████
+    │ ████ ██
+    │ ████ ██ █
+    │ ████ ██ █ █
+    └─────────────────→ CPU Burst Duration
+    Many short bursts, few long bursts
+                </pre>
+            </div>
+
+            <h4>4.2 CPU Scheduler</h4>
+            <div class="important">
+                <strong>CPU Scheduler:</strong> Selects a process from ready queue when CPU becomes idle
+            </div>
+
+            <p><strong>Scheduling Decisions occur when:</strong></p>
+            <ol>
+                <li>Process switches from running to waiting (I/O request)</li>
+                <li>Process switches from running to ready (interrupt)</li>
+                <li>Process switches from waiting to ready (I/O completion)</li>
+                <li>Process terminates</li>
+            </ol>
+
+            <p><strong>Types:</strong></p>
+            <ul>
+                <li><strong>Nonpreemptive:</strong> Scheduling only in cases 1 and 4</li>
+                <li><strong>Preemptive:</strong> Scheduling in all four cases</li>
+            </ul>
+
+            <h4>4.3 Scheduling Criteria</h4>
+
+            <table>
+                <tr>
+                    <th>Criterion</th>
+                    <th>Description</th>
+                    <th>Goal</th>
+                </tr>
+                <tr>
+                    <td>CPU Utilization</td>
+                    <td>Percentage of time CPU is busy</td>
+                    <td>Maximize</td>
+                </tr>
+                <tr>
+                    <td>Throughput</td>
+                    <td>Number of processes completed per unit time</td>
+                    <td>Maximize</td>
+                </tr>
+                <tr>
+                    <td>Turnaround Time</td>
+                    <td>Time from submission to completion</td>
+                    <td>Minimize</td>
+                </tr>
+                <tr>
+                    <td>Waiting Time</td>
+                    <td>Time spent waiting in ready queue</td>
+                    <td>Minimize</td>
+                </tr>
+                <tr>
+                    <td>Response Time</td>
+                    <td>Time from submission to first response</td>
+                    <td>Minimize</td>
+                </tr>
+            </table>
+
+            <h4>4.4 Scheduling Algorithms</h4>
+
+            <p><strong>4.4.1 First-Come, First-Served (FCFS)</strong></p>
+            <ul>
+                <li>Simplest scheduling algorithm</li>
+                <li>Nonpreemptive</li>
+                <li>Poor performance due to convoy effect</li>
+            </ul>
+
+            <div class="example">
+                <strong>FCFS Example:</strong>
+                <table>
+                    <tr>
+                        <th>Process</th>
+                        <th>Burst Time</th>
+                    </tr>
+                    <tr><td>P1</td><td>24</td></tr>
+                    <tr><td>P2</td><td>3</td></tr>
+                    <tr><td>P3</td><td>3</td></tr>
+                </table>
+                <p>Gantt Chart: P1 (0-24) | P2 (24-27) | P3 (27-30)</p>
+                <p>Average Waiting Time = (0 + 24 + 27) / 3 = 17 ms</p>
+            </div>
+
+            <p><strong>4.4.2 Shortest-Job-First (SJF)</strong></p>
+            <ul>
+                <li>Optimal algorithm - minimizes average waiting time</li>
+                <li>Can be preemptive or nonpreemptive</li>
+                <li>Difficulty: predicting next CPU burst</li>
+            </ul>
+
+            <p><strong>CPU Burst Prediction:</strong></p>
+            <div class="code-block">
+τ(n+1) = α × t(n) + (1-α) × τ(n)
+
+Where:
+- τ(n+1) = predicted next burst
+- t(n) = actual last burst  
+- α = weighting factor (0 ≤ α ≤ 1)
+            </div>
+
+            <p><strong>4.4.3 Priority Scheduling</strong></p>
+            <ul>
+                <li>Each process assigned a priority</li>
+                <li>CPU allocated to highest priority process</li>
+                <li>Problem: Starvation of low-priority processes</li>
+                <li>Solution: Aging - gradually increase priority</li>
+            </ul>
+
+            <p><strong>4.4.4 Round Robin (RR)</strong></p>
+            <ul>
+                <li>Designed for time-sharing systems</li>
+                <li>Each process gets CPU for time quantum</li>
+                <li>Preemptive FCFS with time slicing</li>
+            </ul>
+
+            <div class="important">
+                <strong>Time Quantum Selection:</strong>
+                <ul>
+                    <li>Too large → behaves like FCFS</li>
+                    <li>Too small → too many context switches</li>
+                    <li>Rule: 80% of CPU bursts should be shorter than quantum</li>
+                </ul>
+            </div>
+
+            <p><strong>4.4.5 Multilevel Queue Scheduling</strong></p>
+            <ul>
+                <li>Ready queue divided into separate queues</li>
+                <li>Processes permanently assigned to queues</li>
+                <li>Each queue has its own scheduling algorithm</li>
+                <li>Scheduling between queues (usually priority-based)</li>
+            </ul>
+
+            <div class="diagram">
+                <h4>Multilevel Queue Structure</h4>
+                <pre>
+┌─────────────────────┐
+│  System Processes   │ ← Highest Priority
+├─────────────────────┤
+│ Interactive Processes│
+├─────────────────────┤
+│ Interactive Editing │
+├─────────────────────┤
+│  Batch Processes    │
+├─────────────────────┤
+│ Student Processes   │ ← Lowest Priority
+└─────────────────────┘
+                </pre>
+            </div>
+
+            <p><strong>4.4.6 Multilevel Feedback Queue</strong></p>
+            <ul>
+                <li>Processes can move between queues</li>
+                <li>Aging prevents starvation</li>
+                <li>Separates processes based on CPU burst characteristics</li>
+                <li>Most general and flexible</li>
+            </ul>
+
+            <div class="example">
+                <strong>Algorithm Comparison:</strong>
+                <table>
+                    <tr>
+                        <th>Algorithm</th>
+                        <th>Selection Criteria</th>
+                        <th>Preemptive</th>
+                        <th>Starvation</th>
+                    </tr>
+                    <tr>
+                        <td>FCFS</td>
+                        <td>Arrival time</td>
+                        <td>No</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td>SJF</td>
+                        <td>Burst time</td>
+                        <td>Yes/No</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td>Priority</td>
+                        <td>Priority</td>
+                        <td>Yes/No</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td>RR</td>
+                        <td>Time quantum</td>
+                        <td>Yes</td>
+                        <td>No</td>
+                    </tr>
+                </table>
+            </div>
         </div>
+
+        <!-- UNIT II -->
+        <div class="unit">
+            <h2>UNIT II - Process Synchronization and Deadlocks</h2>
+
+            <h3>1. Process Synchronization</h3>
+
+            <h4>1.1 Background</h4>
+            <div class="important">
+                <strong>Race Condition:</strong> Multiple processes access shared data concurrently, and the outcome depends on the order of execution
+            </div>
+
+            <p><strong>Producer-Consumer Problem:</strong></p>
+            <div class="code-block">
+Producer:
+while (true) {
+    // produce item;
+    while (count == BUFFER_SIZE);
+        // busy wait;
+    buffer[in] = item;
+    in = (in + 1) % BUFFER_SIZE;
+    count++;
+}
+
+Consumer:
+while (true) {
+    while (count == 0);
+        // busy wait;
+    item = buffer[out];
+    out = (out + 1) % BUFFER_SIZE;
+    count--;
+    // consume item;
+}
+            </div>
+
+            <p><strong>Problem with Concurrent Execution:</strong></p>
+            <ul>
+                <li>count++ and count-- are not atomic operations</li>
+                <li>Machine code involves: load, increment/decrement, store</li>
+                <li>Interleaving can cause incorrect results</li>
+            </ul>
+
+            <h4>1.2 Critical-Section Problem</h4>
+            <div class="important">
+                <strong>Critical Section:</strong> Segment of code where shared variables are accessed
+            </div>
+
+            <div class="diagram">
+                <h4>General Structure of Process</h4>
+                <pre>
+do {
+    [Entry Section];
+    
+    Critical Section;
+    
+    [Exit Section];
+    
+    Remainder Section;
+    
+} while (true);
+                </pre>
+            </div>
+
+            <p><strong>Requirements for Solution:</strong></p>
+            <ol>
+                <li><strong>Mutual Exclusion:</strong> Only one process in critical section at a time</li>
+                <li><strong>Progress:</strong> Selection of next process cannot be postponed indefinitely</li>
+                <li><strong>Bounded Waiting:</strong> Limit on how many times others can enter before a waiting process</li>
+            </ol>
+
+            <h4>1.3 Two-Process Solutions</h4>
+
+            <p><strong>Algorithm 1 - Turn Variable:</strong></p>
+            <div class="code-block">
+Shared variable: int turn = 0;
+
+Process P0:
+do {
+    while (turn != 0);
+    critical section;
+    turn = 1;
+    remainder section;
+} while (true);
+
+Process P1:
+do {
+    while (turn != 1);
+    critical section;
+    turn = 0;
+    remainder section;
+} while (true);
+            </div>
+            <ul>
+                <li>✓ Mutual exclusion</li>
+                <li>✗ Progress (strict alternation)</li>
+            </ul>
+
+            <p><strong>Algorithm 2 - Flag Array:</strong></p>
+            <div class="code-block">
+Shared variable: boolean flag[2] = {false, false};
+
+Process Pi:
+do {
+    flag[i] = true;
+    while (flag[j]);
+    critical section;
+    flag[i] = false;
+    remainder section;
+} while (true);
+            </div>
+            <ul>
+                <li>✗ Mutual exclusion (both can enter)</li>
+                <li>✓ Progress</li>
+            </ul>
+
+            <p><strong>Algorithm 3 - Peterson's Solution:</strong></p>
+            <div class="code-block">
+Shared variables:
+boolean flag[2] = {false, false};
+int turn = 0;
+
+Process Pi:
+do {
+    flag[i] = true;
+    turn = j;
+    while (flag[j] && turn == j);
+    critical section;
+    flag[i] = false;
+    remainder section;
+} while (true);
+            </div>
+            <ul>
+                <li>✓ Mutual exclusion</li>
+                <li>✓ Progress</li>
+                <li>✓ Bounded waiting</li>
+            </ul>
+
+            <h4>1.4 Multiple-Process Solutions</h4>
+
+            <p><strong>Bakery Algorithm:</strong></p>
+            <ul>
+                <li>Based on bakery number system</li>
+                <li>Each process gets a number</li>
+                <li>Process with smallest number enters first</li>
+                <li>Handles n processes</li>
+            </ul>
+
+            <div class="code-block">
+Shared data:
+boolean choosing[n] = {false};
+int number[n] = {0};
+
+Process Pi:
+do {
+    choosing[i] = true;
+    number[i] = max(number[0],...,number[n-1]) + 1;
+    choosing[i] = false;
+    for (j = 0; j < n; j++) {
+        while (choosing[j]);
+        while ((number[j] != 0) &&
+               ((number[j], j) < (number[i], i)));
+    }
+    critical section;
+    number[i] = 0;
+    remainder section;
+} while (true);
+            </div>
+
+            <h4>1.5 Synchronization Hardware</h4>
+
+            <p><strong>TestAndSet Instruction:</strong></p>
+            <div class="code-block">
+boolean TestAndSet(boolean *target) {
+    boolean rv = *target;
+    *target = true;
+    return rv;
+}
+
+// Usage for mutual exclusion
+Shared variable: boolean lock = false;
+
+Process Pi:
+do {
+    while (TestAndSet(&lock));
+    critical section;
+    lock = false;
+    remainder section;
+} while (true);
+            </div>
+
+            <p><strong>Swap Instruction:</strong></p>
+            <div class="code-block">
+void Swap(boolean *a, boolean *b) {
+    boolean temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+// Usage for mutual exclusion
+Shared variable: boolean lock = false;
+
+Process Pi:
+do {
+    key = true;
+    while (key == true)
+        Swap(&lock, &key);
+    critical section;
+    lock = false;
+    remainder section;
+} while (true);
+            </div>
+
+            <div class="important">
+                <strong>Hardware Solutions:</strong>
+                <ul>
+                    <li>✓ Simple and effective</li>
+                    <li>✓ Work on multiprocessors</li>
+                    <li>✗ Busy waiting (spinlock)</li>
+                    <li>✗ Starvation possible</li>
+                </ul>
+            </div>
+
+            <h4>1.6 Semaphores</h4>
+            <div class="important">
+                <strong>Semaphore:</strong> Integer variable accessed only through atomic wait() and signal() operations
+            </div>
+
+            <div class="code-block">
+wait(S) {
+    while (S <= 0);
+        // busy wait;
+    S--;
+}
+
+signal(S) {
+    S++;
+}
+            </div>
+
+            <p><strong>Types of Semaphores:</strong></p>
+            <ul>
+                <li><strong>Binary Semaphore:</strong> Values 0 or 1 (mutex)</li>
+                <li><strong>Counting Semaphore:</strong> Unrestricted integer values</li>
+            </ul>
+
+            <p><strong>Usage:</strong></p>
+            <ul>
+                <li><strong>Mutual Exclusion:</strong> Initialize semaphore to 1</li>
+                <li><strong>Synchronization:</strong> Initialize semaphore to 0</li>
+            </ul>
+
+            <div class="example">
+                <strong>Mutual Exclusion with Semaphores:</strong>
+                <div class="code-block">
+Semaphore mutex = 1;
+
+Process Pi:
+do {
+    wait(mutex);
+    critical section;
+    signal(mutex);
+    remainder section;
+} while (true);
+                </div>
+            </div>
+
+            <p><strong>Implementation without Busy Waiting:</strong></p>
+            <div class="code-block">
+typedef struct {
+    int value;
+    struct process *list;
+} semaphore;
+
+wait(semaphore *S) {
+    S->value--;
+    if (S->value < 0) {
+        add this process to S->list;
+        block();
+    }
+}
+
+signal(semaphore *S) {
+    S->value++;
+    if (S->value <= 0) {
+        remove a process P from S->list;
+        wakeup(P);
+    }
+}
+            </div>
+
+            <h4>1.7 Deadlocks and Starvation</h4>
+
+            <p><strong>Deadlock Example:</strong></p>
+            <div class="code-block">
+Process P0:           Process P1:
+do {                  do {
+    wait(S);              wait(Q);
+    wait(Q);              wait(S);
+    ...;                  ...;
+    signal(S);            signal(Q);
+    signal(Q);            signal(S);
+} while (true);       } while (true);
+            </div>
+
+            <p><strong>Starvation (Indefinite Blocking):</strong></p>
+            <ul>
+                <li>Process waits indefinitely in semaphore queue</li>
+                <li>Can occur with LIFO queue implementation</li>
+                <li>Solution: FIFO queue or aging</li>
+            </ul>
+
+            <h4>1.8 Critical Regions</h4>
+            <div class="important">
+                <strong>Critical Region:</strong> High-level synchronization construct to avoid semaphore programming errors
+            </div>
+
+            <div class="code-block">
+region v when B do S;
+
+Where:
+- v: shared variable;
+- B: boolean expression;
+- S: statement;
+            </div>
+
+            <p><strong>Advantages:</strong></p>
+            <ul>
+                <li>Automatic mutual exclusion</li>
+                <li>Prevents common programming errors</li>
+                <li>Compiler enforced</li>
+            </ul>
+
+            <h4>1.9 Monitors</h4>
+            <div class="important">
+                <strong>Monitor:</strong> High-level synchronization construct that combines data, operations, and synchronization in one module
+            </div>
+
+            <div class="diagram">
+                <h4>Monitor Structure</h4>
+                <pre>
+monitor MonitorName {
+    // shared variable declarations;
+    
+    procedure P1(...) {
+        ...;
+    }
+    
+    procedure P2(...) {
+        ...;
+    }
+    
+    initialization code;
+}
+                </pre>
+            </div>
+
+            <p><strong>Characteristics:</strong></p>
+            <ul>
+                <li>Only one process active in monitor at a time</li>
+                <li>Shared variables accessible only within monitor</li>
+                <li>Automatic mutual exclusion</li>
+            </ul>
+
+            <p><strong>Condition Variables:</strong></p>
+            <div class="code-block">
+condition x;
+
+x.wait();  // suspend process;
+x.signal(); // resume one suspended process;
+            </div>
+
+            <div class="example">
+                <strong>Dining Philosophers with Monitors:</strong>
+                <div class="code-block">
+monitor DiningPhilosophers {
+    enum {THINKING, HUNGRY, EATING} state[5];
+    condition self[5];
+    
+    void pickup(int i) {
+        state[i] = HUNGRY;
+        test(i);
+        if (state[i] != EATING)
+            self[i].wait();
+    }
+    
+    void putdown(int i) {
+        state[i] = THINKING;
+        test((i + 4) % 5);
+        test((i + 1) % 5);
+    }
+    
+    void test(int i) {
+        if ((state[(i + 4) % 5] != EATING) &&
+            (state[i] == HUNGRY) &&
+            (state[(i + 1) % 5] != EATING)) {
+            state[i] = EATING;
+            self[i].signal();
+        }
+    }
+}
+                </div>
+            </div>
+
+            <h3>2. Deadlocks</h3>
+
+            <h4>2.1 System Model</h4>
+            <div class="important">
+                <strong>Deadlock:</strong> Set of processes blocked forever, each waiting for a resource held by another process in the set
+            </div>
+
+            <p><strong>Resource Usage:</strong></p>
+            <ol>
+                <li><strong>Request:</strong> Process requests resource</li>
+                <li><strong>Use:</strong> Process uses resource</li>
+                <li><strong>Release:</strong> Process releases resource</li>
+            </ol>
+
+            <h4>2.2 Deadlock Characterization</h4>
+
+            <p><strong>Necessary Conditions (All must hold):</strong></p>
+            <ol>
+                <li><strong>Mutual Exclusion:</strong> At least one resource must be non-sharable</li>
+                <li><strong>Hold and Wait:</strong> Process holds resources while waiting for others</li>
+                <li><strong>No Preemption:</strong> Resources cannot be forcibly taken away</li>
+                <li><strong>Circular Wait:</strong> Circular chain of processes waiting for resources</li>
+            </ol>
+
+            <div class="diagram">
+                <h4>Resource-Allocation Graph</h4>
+                <pre>
+Process → Resource (Request Edge)
+Resource → Process (Assignment Edge)
+
+Example:
+P1 → R1 → P2 → R2 → P3 → R3 → P1 (Deadlock!)
+                </pre>
+            </div>
+
+            <p><strong>Graph Analysis:</strong></p>
+            <ul>
+                <li>No cycle → No deadlock</li>
+                <li>Cycle + single instance per resource → Deadlock</li>
+                <li>Cycle + multiple instances → Deadlock possible</li>
+            </ul>
+
+            <h4>2.3 Methods for Handling Deadlocks</h4>
+
+            <ol>
+                <li><strong>Deadlock Prevention:</strong> Ensure at least one necessary condition never holds</li>
+                <li><strong>Deadlock Avoidance:</strong> Dynamically examine resource allocation state</li>
+                <li><strong>Deadlock Detection and Recovery:</strong> Allow deadlocks, detect and recover</li>
+                <li><strong>Ignore the Problem:</strong> Assume deadlocks are rare (used by UNIX)</li>
+            </ol>
+
+            <h4>2.4 Deadlock Prevention</h4>
+
+            <p><strong>Attacking Mutual Exclusion:</strong></p>
+            <ul>
+                <li>Not possible for non-sharable resources</li>
+                <li>Some resources are inherently non-sharable</li>
+            </ul>
+
+            <p><strong>Attacking Hold and Wait:</strong></p>
+            <ul>
+                <li>Request all resources at once before execution</li>
+                <li>Release all resources before requesting new ones</li>
+                <li>Disadvantages: Low resource utilization, starvation</li>
+            </ul>
+
+            <p><strong>Attacking No Preemption:</strong></p>
+            <ul>
+                <li>If request cannot be granted, release all held resources</li>
+                <li>Works only for resources with savable state (CPU, memory)</li>
+                <li>Not applicable to printers, tape drives</li>
+            </ul>
+
+            <p><strong>Attacking Circular Wait:</strong></p>
+            <ul>
+                <li>Impose total ordering on resource types</li>
+                <li>Request resources in increasing order</li>
+                <li>Prevents circular wait condition</li>
+            </ul>
+
+            <div class="example">
+                <strong>Resource Ordering Example:</strong>
+                <ul>
+                    <li>F(tape drive) = 1</li>
+                    <li>F(disk drive) = 5</li>
+                    <li>F(printer) = 12</li>
+                </ul>
+                <p>Process must request tape drive before disk drive before printer</p>
+            </div>
+
+            <h4>2.5 Deadlock Avoidance</h4>
+            <div class="important">
+                <strong>Safe State:</strong> System can allocate resources to each process in some order and avoid deadlock
+            </div>
+
+            <p><strong>Safe vs Unsafe States:</strong></p>
+            <ul>
+                <li>Safe state → No deadlock</li>
+                <li>Unsafe state → Deadlock possible</li>
+                <li>All deadlock states are unsafe</li>
+                <li>Not all unsafe states are deadlock</li>
+            </ul>
+
+            <div class="diagram">
+                <h4>State Space Diagram</h4>
+                <pre>
+┌─────────────────────────────────┐
+│          All States             │
+│  ┌─────────────────────────┐    │
+│  │      Safe States        │    │
+│  │                         │    │
+│  └─────────────────────────┘    │
+│  ┌─────────────────────────┐    │
+│  │     Unsafe States       │    │
+│  │  ┌─────────────────┐    │    │
+│  │  │ Deadlock States │    │    │
+│  │  └─────────────────┘    │    │
+│  └─────────────────────────┘    │
+└─────────────────────────────────┘
+                </pre>
+            </div>
+
+            <p><strong>Banker's Algorithm:</strong></p>
+            <div class="important">
+                <strong>Analogy:</strong> Bank never allocates cash such that it cannot satisfy maximum needs of all customers
+            </div>
+
+            <p><strong>Data Structures:</strong></p>
+            <ul>
+                <li><strong>Available[m]:</strong> Available instances of each resource</li>
+                <li><strong>Max[n][m]:</strong> Maximum demand of each process</li>
+                <li><strong>Allocation[n][m]:</strong> Currently allocated resources</li>
+                <li><strong>Need[n][m]:</strong> Remaining resource needs (Max - Allocation)</li>
+            </ul>
+
+            <p><strong>Safety Algorithm:</strong></p>
+            <div class="code-block">
+1. Work = Available;
+   Finish[i] = false for all i;
+
+2. Find i such that:
+   Finish[i] == false AND Need[i] <= Work;
+   
+3. Work = Work + Allocation[i];
+   Finish[i] = true;
+   
+4. If all Finish[i] == true, system is safe;
+            </div>
+
+            <p><strong>Resource-Request Algorithm:</strong></p>
+            <div class="code-block">
+Request[i] = request vector for process Pi;
+
+1. If Request[i] <= Need[i], go to step 2;
+   Otherwise, error (exceeds maximum claim);
+
+2. If Request[i] <= Available, go to step 3;
+   Otherwise, wait (resources not available);
+
+3. Pretend allocation:
+   Available = Available - Request[i];
+   Allocation[i] = Allocation[i] + Request[i];
+   Need[i] = Need[i] - Request[i];
+
+4. Run safety algorithm:
+   If safe → grant request;
+   If unsafe → rollback and wait;
+            </div>
+
+            <h4>2.6 Deadlock Detection</h4>
+
+            <p><strong>Single Instance - Wait-for Graph:</strong></p>
+            <ul>
+                <li>Remove resource nodes from resource-allocation graph</li>
+                <li>Pi → Pj if Pi waits for resource held by Pj</li>
+                <li>Cycle in wait-for graph → deadlock</li>
+            </ul>
+
+            <p><strong>Multiple Instances - Detection Algorithm:</strong></p>
+            <div class="code-block">
+1. Work = Available;
+   Finish[i] = false if Allocation[i] != 0;
+
+2. Find i such that:
+   Finish[i] == false AND Request[i] <= Work;
+
+3. Work = Work + Allocation[i];
+   Finish[i] = true;
+
+4. If Finish[i] == false for some i,
+   then system is deadlocked;
+            </div>
+
+            <p><strong>When to Invoke Detection:</strong></p>
+            <ul>
+                <li>Every time request cannot be granted immediately</li>
+                <li>Periodically (e.g., once per hour)</li>
+                <li>When CPU utilization drops below threshold</li>
+            </ul>
+
+            <h4>2.7 Recovery from Deadlock</h4>
+
+            <p><strong>Process Termination:</strong></p>
+            <ul>
+                <li><strong>Abort all deadlocked processes:</strong> Expensive but effective</li>
+                <li><strong>Abort one process at a time:</strong> Overhead of repeated detection</li>
+            </ul>
+
+            <p><strong>Victim Selection Factors:</strong></p>
+            <ul>
+                <li>Priority of process</li>
+                <li>Computation time and remaining time</li>
+                <li>Resources used and needed</li>
+                <li>Number of processes to terminate</li>
+                <li>Interactive vs batch process</li>
+            </ul>
+
+            <p><strong>Resource Preemption:</strong></p>
+            <ol>
+                <li><strong>Selecting a victim:</strong> Minimize cost</li>
+                <li><strong>Rollback:</strong> Return to safe state</li>
+                <li><strong>Starvation:</strong> Ensure same process not always chosen</li>
+            </ol>
+
+            <div class="important">
+                <strong>Deadlock Handling Summary:</strong>
+                <table>
+                    <tr>
+                        <th>Method</th>
+                        <th>Approach</th>
+                        <th>Overhead</th>
+                        <th>When to Use</th>
+                    </tr>
+                    <tr>
+                        <td>Prevention</td>
+                        <td>Deny necessary conditions</td>
+                        <td>High</td>
+                        <td>Simple systems</td>
+                    </tr>
+                    <tr>
+                        <td>Avoidance</td>
+                        <td>Safe state maintenance</td>
+                        <td>Medium</td>
+                        <td>Known resource needs</td>
+                    </tr>
+                    <tr>
+                        <td>Detection</td>
+                        <td>Detect and recover</td>
+                        <td>Low</td>
+                        <td>Rare deadlocks</td>
+                    </tr>
+                    <tr>
+                        <td>Ignore</td>
+                        <td>Do nothing</td>
+                        <td>None</td>
+                        <td>Very rare deadlocks</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div style="margin-top: 50px; padding: 20px; background: #2c3e50; color: white; text-align: center; border-radius: 10px;">
+            <h3>Exam Preparation Tips</h3>
+            <ul style="text-align: left; max-width: 800px; margin: 0 auto;">
+                <li><strong>For 2-mark questions:</strong> Focus on definitions and key characteristics</li>
+                <li><strong>For 5-mark questions:</strong> Explain concepts with examples</li>
+                <li><strong>For 8-10 mark questions:</strong> Include diagrams, algorithms, and detailed explanations</li>
+                <li><strong>For 15-mark questions:</strong> Cover complete topics with comparisons and applications</li>
+                <li><strong>Practice:</strong> Draw state diagrams, solve scheduling problems, trace algorithms</li>
+                <li><strong>Remember:</strong> Always include advantages, disadvantages, and real-world applications</li>
+            </ul>
+        </div>
+
+        <footer style="margin-top: 30px; text-align: center; color: #7f8c8d; font-style: italic;">
+            <p>Comprehensive Operating Systems Notes - IA1 Preparation</p>
+            <p>Based on Silberschatz, Galvin & Gagne - Operating System Concepts</p>
+        </footer>
     </div>
-
-    <script>
-        function toggleFields() {
-            const algo = document.getElementById('algorithm').value;
-            document.getElementById('quantumField').className = algo === 'rr' ? '' : 'hidden';
-            document.getElementById('priorityField').className = (algo === 'priority_np' || algo === 'priority_p') ? '' : 'hidden';
-        }
-
-        function calculate() {
-            const algo = document.getElementById('algorithm').value;
-            const arrival = document.getElementById('arrival').value.split(',').map(x => parseInt(x.trim()));
-            const burst = document.getElementById('burst').value.split(',').map(x => parseInt(x.trim()));
-            
-            const payload = { algorithm: algo, arrival, burst };
-            
-            if (algo === 'rr') {
-                payload.quantum = parseInt(document.getElementById('quantum').value);
-            }
-            if (algo === 'priority_np' || algo === 'priority_p') {
-                payload.priority = document.getElementById('priority').value.split(',').map(x => parseInt(x.trim()));
-            }
-
-            fetch('/calculate', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.error) {
-                    alert(data.error);
-                    return;
-                }
-                let html = `
-                    <h3>Execution Order: ${data.gantt.map(p => 'P' + p).join(' → ')}</h3>
-                    <table>
-                        <tr>
-                            <th>Process</th>
-                            <th>Arrival Time</th>
-                            <th>Burst Time</th>
-                            <th>Finish Time</th>
-                            <th>Turnaround Time</th>
-                            <th>Waiting Time</th>
-                        </tr>
-                `;
-                
-                for (let i = 0; i < arrival.length; i++) {
-                    html += `
-                        <tr>
-                            <td>P${i + 1}</td>
-                            <td>${arrival[i]}</td>
-                            <td>${burst[i]}</td>
-                            <td>${data.finish[i]}</td>
-                            <td>${data.turnaround[i]}</td>
-                            <td>${data.waiting[i]}</td>
-                        </tr>
-                    `;
-                }
-                
-                html += `
-                    </table>
-                    <h3>Average Turnaround Time: ${data.avg_tat}</h3>
-                    <h3>Average Waiting Time: ${data.avg_wait}</h3>
-                `;
-                
-                document.getElementById('result').innerHTML = html;
-            });
-        }
-    </script>
 </body>
 </html>
